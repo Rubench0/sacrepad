@@ -28,12 +28,12 @@ class UsersController extends AbstractController {
 			$form = json_decode($json);
 
 			$response = array(
-				'status' => 'Error',
+				'status' => 'error',
 				'code' => 400,
 				'msg' => 'Error al crear usuario.',
 	 		);
 
-	 		if ($json != null) {
+	 		if ($form != null) {
 	 			$createdAt = new \Datetime('now');
 
 	 			$login = (isset($form->login)) ? $form->login : null;
@@ -71,14 +71,14 @@ class UsersController extends AbstractController {
 						$em->persist($User);
 		    			$em->flush();
 						$response = array(
-							'status' => 'Success',
+							'status' => 'success',
 							'code' => 200,
 							'msg' => 'Usuario creado.',
 							'user' => $User
 			 			);
 					} else {
 						$response = array(
-							'status' => 'Error',
+							'status' => 'error',
 							'code' => 400,
 							'msg' => 'El usuario se encuentra registrado.',
 	 					);
@@ -88,7 +88,7 @@ class UsersController extends AbstractController {
 	 		}
 		} else {
 			$response = array(
-				'status' => 'Error',
+				'status' => 'error',
 				'code' => 400,
 				'msg' => 'No tiene acceso.',
 			);
@@ -113,7 +113,7 @@ class UsersController extends AbstractController {
  			$User =  $em->getRepository(Users::class)->findOneById($identity->sub);
 			
 			$response = array(
-				'status' => 'Error',
+				'status' => 'error',
 				'code' => 400,
 				'msg' => 'Error al actualizar usuario.',
 	 		);
@@ -133,7 +133,7 @@ class UsersController extends AbstractController {
 				$emailConstraint->message = 'El email no es valido';
 				$validate_email = $validator->validate($email, $emailConstraint);
 
-				if ($email != null && count($validate_email) == 0 && $password != null && $name != null && $surname != null && $rol != null && $login != null && $phone != null) {
+				if ($email != null && count($validate_email) == 0 && $name != null && $surname != null && $login != null && $phone != null) {
 
 					$User->setLogin($login);
 /*					$password = hash('sha256', $password);
@@ -150,14 +150,14 @@ class UsersController extends AbstractController {
 						$em->persist($User);
 		    			$em->flush();
 						$response = array(
-							'status' => 'Success',
+							'status' => 'success',
 							'code' => 200,
 							'msg' => 'Usuario actualizado.',
 							'user' => $User
 			 			);
 					} else {
 						$response = array(
-							'status' => 'Error',
+							'status' => 'error',
 							'code' => 400,
 							'msg' => 'El usuario se encuentra registrado.',
 	 					);
@@ -167,7 +167,7 @@ class UsersController extends AbstractController {
 	 		}
 		} else {
 			$response = array(
-				'status' => 'Error',
+				'status' => 'error',
 				'code' => 400,
 				'msg' => 'No tiene acceso.',
 			);
