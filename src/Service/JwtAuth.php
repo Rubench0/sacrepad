@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use Firebase\JWT\JWT;
-use App\Entity\Users;
+use App\Entity\User;
 
 /**
  * 
@@ -18,7 +18,7 @@ class JwtAuth {
 	}
 	
 	public function singup($email, $password, $getHash = null) {
-		$user = $this->manager->getRepository(Users::class)->findOneBy(array(
+		$user = $this->manager->getRepository(User::class)->findOneBy(array(
 			'email'=>$email,
 			'password'=>$password
 		));
@@ -29,18 +29,51 @@ class JwtAuth {
 		}
 
 		if ($singup == true) {
-			$token = array(
-				'sub' => $user->getId(),
-				'email' => $user->getEmail(),
-				'login' => $user->getLogin(),
-				'active' => $user->getIsActive(),
-				'role' => $user->getRoles(),
-				'name' => $user->getIdUserData()->getName(),
-				'surname' => $user->getIdUserData()->getSurname(),
-				'phone' => $user->getIdUserData()->getPhone(),
-				'iat' => time(),
-				'exp' => time() + (7 * 24 * 60 * 60)
-			);
+
+			if ($user->getUserData() != null) {
+				$token = array(
+					'id' => $user->getId(),
+					'email' => $user->getEmail(),
+					'login' => $user->getLogin(),
+					'active' => $user->getIsActive(),
+					'rol' => $user->getRole(),
+					'name' => $user->getUserData()->getName(),
+					'surname' => $user->getUserData()->getSurname(),
+					'phone' => $user->getUserData()->getPhone(),
+					'type' => '1',
+					'iat' => time(),
+					'exp' => time() + (7 * 24 * 60 * 60)
+				);
+			} elseif ($user->getStudent() != null) {
+				$token = array(
+					'id' => $user->getId(),
+					'email' => $user->getEmail(),
+					'login' => $user->getLogin(),
+					'active' => $user->getIsActive(),
+					'rol' => $user->getRole(),
+					'name' => $user->getStudent()->getName(),
+					'surname' => $user->getStudent()->getSurname(),
+					'phone' => $user->getStudent()->getPhone(),
+					'type' => '3',
+					'iat' => time(),
+					'exp' => time() + (7 * 24 * 60 * 60)
+				);
+			} elseif ($user->getFacilitator() != null) {
+				$token = array(
+					'id' => $user->getId(),
+					'email' => $user->getEmail(),
+					'login' => $user->getLogin(),
+					'active' => $user->getIsActive(),
+					'rol' => $user->getRole(),
+					'name' => $user->getFacilitator()->getName(),
+					'surname' => $user->getFacilitator()->getSurname(),
+					'phone' => $user->getFacilitator()->getPhone(),
+					'type' => '2',
+					'iat' => time(),
+					'exp' => time() + (7 * 24 * 60 * 60)
+				);
+			}
+
 
 			$jwt = JWT::encode($token, $this->key, 'HS256');
 			$jwt_decode = JWT::decode($jwt, $this->key, array('HS256'));
@@ -71,7 +104,7 @@ class JwtAuth {
 			$auth = false;
 		}
 
-		if (isset($token_decode) && is_object($token_decode) && isset($token_decode->sub)) {
+		if (isset($token_decode) && is_object($token_decode) && isset($token_decode->id)) {
 			$auth = true;
 		} else {
 			$auth = false;
