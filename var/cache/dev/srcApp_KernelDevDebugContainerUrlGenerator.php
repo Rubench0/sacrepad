@@ -23,6 +23,7 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         'main' => array(array(), array('_controller' => 'App\\Controller\\MainController::index'), array(), array(array('text', '/main')), array(), array()),
         'login' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::login'), array(), array(array('text', '/login')), array(), array()),
         'security_binnacle_actions' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleActions'), array(), array(array('text', '/security/binnacle/actions')), array(), array()),
+        'security_binnacle_access' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleAccess'), array(), array(array('text', '/security/binnacle/access')), array(), array()),
         'user_new' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserRegistry'), array(), array(array('text', '/user/new')), array(), array()),
         'user_profile_edit' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserProfileUpdate'), array(), array(array('text', '/user/profile/edit')), array(), array()),
         'user_all' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserAll'), array(), array(array('text', '/user/all')), array(), array()),

@@ -12,6 +12,8 @@ include_once $this->targetDirs[3].'/vendor/symfony/http-kernel/Controller/Argume
 
 return $this->privates['debug.argument_resolver.service'] = new \Symfony\Component\HttpKernel\Controller\ArgumentResolver\TraceableValueResolver(new \Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver(new \Symfony\Component\DependencyInjection\Argument\ServiceLocator($this->getService, array(
     'App\\Controller\\MainController::index' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
+    'App\\Controller\\SecurityController::binnacleAccess' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
+    'App\\Controller\\SecurityController::binnacleActions' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
     'App\\Controller\\SecurityController::login' => array('privates', '.service_locator.nx_RgZP', 'get_ServiceLocator_NxRgZPService.php', true),
     'App\\Controller\\UsersController::UserAll' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
     'App\\Controller\\UsersController::UserChangePassword' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
@@ -21,6 +23,8 @@ return $this->privates['debug.argument_resolver.service'] = new \Symfony\Compone
     'App\\Controller\\UsersController::UserProfileUpdate' => array('privates', '.service_locator.nx_RgZP', 'get_ServiceLocator_NxRgZPService.php', true),
     'App\\Controller\\UsersController::UserRegistry' => array('privates', '.service_locator.nx_RgZP', 'get_ServiceLocator_NxRgZPService.php', true),
     'App\\Controller\\MainController:index' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
+    'App\\Controller\\SecurityController:binnacleAccess' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
+    'App\\Controller\\SecurityController:binnacleActions' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
     'App\\Controller\\SecurityController:login' => array('privates', '.service_locator.nx_RgZP', 'get_ServiceLocator_NxRgZPService.php', true),
     'App\\Controller\\UsersController:UserAll' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),
     'App\\Controller\\UsersController:UserChangePassword' => array('privates', '.service_locator.1ioWPMn', 'get_ServiceLocator_1ioWPMnService.php', true),

@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Service\Helpers;
 use App\Service\JwtAuth;
 use App\Entity\BinnacleActions;
+use App\Entity\BinnacleAccessUser;
 
 
 class SecurityController extends AbstractController
@@ -48,7 +49,6 @@ class SecurityController extends AbstractController
 					'data' => 'Email correcto',
 					'singup' => $singup
 				);		*/	
-
 				return $helpers->json($singup);
 			} else {
 				$data = array(
@@ -88,6 +88,47 @@ class SecurityController extends AbstractController
 					'description' => $users[$key]->getDescription(),
 				];
 			}
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/security/binnacle/access", name="security_binnacle_access", methods={"POST"})
+	 */
+	public function binnacleAccess(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$createdAt = new \Datetime('now');
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$binnacles =  $em->getRepository(BinnacleAccessUser::class)->findAll();
+			foreach ($binnacles as $key => $value) {
+				$data[] = [
+					'id' => $binnacles[$key]->getId(),
+					'date' => $binnacles[$key]->getDate(),
+					'network' => $binnacles[$key]->getNetworkLocation(),
+					'device' => $binnacles[$key]->getDevice(),
+					'adress' => $binnacles[$key]->getAdreess(),
+					'user' => $binnacles[$key]->getUser()->getLogin(),
+				];
+			}
+			$helpers->binnacleAction('BinnacleAccessUser','consulta',$createdAt,'Consulta de registros de acceso.',$identity->id);
 			$response = array(
 				'status' => 'success',
 				'code' => 200,

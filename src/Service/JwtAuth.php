@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Firebase\JWT\JWT;
 use App\Entity\User;
+use App\Entity\BinnacleAccessUser;
 
 /**
  * 
@@ -77,6 +78,17 @@ class JwtAuth {
 
 			$jwt = JWT::encode($token, $this->key, 'HS256');
 			$jwt_decode = JWT::decode($jwt, $this->key, array('HS256'));
+			
+			$dateAccess = new \Datetime('now');
+			$user_id = $this->manager->getRepository(User::class)->findOneById($user->getId());
+			$BinnacleAccessUser = new BinnacleAccessUser();
+			$BinnacleAccessUser->setDate($dateAccess);
+			$BinnacleAccessUser->setNetworkLocation('$network');
+			$BinnacleAccessUser->setDevice('$device');
+			$BinnacleAccessUser->setAdreess('$adreess');
+			$BinnacleAccessUser->setUser($user_id);
+			$this->manager->persist($BinnacleAccessUser);
+			$this->manager->flush();
 
 			if ($getHash == null) {
 				$data = $jwt;

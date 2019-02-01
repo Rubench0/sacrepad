@@ -3,6 +3,7 @@
 namespace App\Service;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\BinnacleActions;
+use App\Entity\BinnacleAccessUser;
 use App\Entity\User;
 
 class Helpers {
