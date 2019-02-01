@@ -487,7 +487,39 @@ class UsersController extends AbstractController {
 		return $helpers->json($response);
 	}
 
+	/**
+	 * @Route("/user/delete", name="user_delete", methods={"POST"})
+	 */
+	public function UserDelete(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
 
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+			$identity = $jwtauth->checkToken($token, true);
+			$login_user = $form->login;
+			$user =  $em->getRepository(User::class)->findOneById($form->id);
+			$em->remove($user);
+			$em->flush();
+			$helpers->binnacleAction('User','consulta',$createdAt,'Se elimino el usuario '.$login_user.'.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => 'Usuario eliminado.',
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
 			
 }
 

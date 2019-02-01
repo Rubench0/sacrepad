@@ -28,6 +28,7 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         'user_get' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserGet'), array(), array(array('text', '/user/get')), array(), array()),
         'user_changepassword' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserChangePassword'), array(), array(array('text', '/user/changepassword')), array(), array()),
         'user_edit' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserEdit'), array(), array(array('text', '/user/edit')), array(), array()),
+        'user_delete' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserDelete'), array(), array(array('text', '/user/delete')), array(), array()),
         '_twig_error_test' => array(array('code', '_format'), array('_controller' => 'twig.controller.preview_error::previewErrorPageAction', '_format' => 'html'), array('code' => '\\d+'), array(array('variable', '.', '[^/]++', '_format', true), array('variable', '/', '\\d+', 'code', true), array('text', '/_error')), array(), array()),
         '_wdt' => array(array('token'), array('_controller' => 'web_profiler.controller.profiler::toolbarAction'), array(), array(array('variable', '/', '[^/]++', 'token', true), array('text', '/_wdt')), array(), array()),
         '_profiler_home' => array(array(), array('_controller' => 'web_profiler.controller.profiler::homeAction'), array(), array(array('text', '/_profiler/')), array(), array()),
