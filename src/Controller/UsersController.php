@@ -300,8 +300,8 @@ class UsersController extends AbstractController {
 						'surname' => $user->getFacilitator()->getSurname(),
 						'phone' => $user->getFacilitator()->getPhone(),
 						'type' => '2',
-						'identification' => $user->getIdentification(),
-						'profession' => $user->getProfession(),
+						'identification' => $user->getFacilitator()->getIdentification(),
+						'profession' => $user->getFacilitator()->getProfession(),
 				];
 			} elseif ($user->getStudent()) {
 				$data = [
@@ -313,9 +313,9 @@ class UsersController extends AbstractController {
 						'surname' => $user->getStudent()->getSurname(),
 						'phone' => $user->getStudent()->getPhone(),
 						'type' => '3',
-						'identification' => $user->getIdentification(),
-						'name2' => $user->getName2(),
-						'surname2' => $user->getSurname2(),
+						'identification' => $user->getStudent()->getIdentification(),
+						'name2' => $user->getStudent()->getName2(),
+						'surname2' => $user->getStudent()->getSurname2(),
 				];
 			}
 			$helpers->binnacleAction('User','consulta',$createdAt,'Consultando datos de usuario.',$identity->id);
@@ -396,6 +396,98 @@ class UsersController extends AbstractController {
 
 		return $helpers->json($response);	
 	}
+
+	/**
+	 * @Route("/user/edit", name="user_edit", methods={"POST"})
+	 */
+	public function UserEdit(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+ 			$User =  $em->getRepository(User::class)->findOneById($form->id);
+ 			$user_update =  $em->getRepository(User::class)->findOneById($identity->id);
+			
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'Error al actualizar usuario.',
+	 		);
+
+	 		if ($json != null) {
+	 			$updateAt = new \Datetime('now');
+
+	 			$login = (isset($form->login)) ? $form->login : null; 
+	 			$password = (isset($form->password)) ? $form->password : null;
+	 			$email = (isset($form->email)) ? $form->email : null;
+	 			$rol = (isset($form->rol)) ? $form->rol : null;
+	 			$name = (isset($form->name)) ? $form->name : null;
+	 			$name2 = (isset($form->name2)) ? $form->name2 : null;
+	 			$surname = (isset($form->surname)) ? $form->surname : null;
+	 			$surname2 = (isset($form->surname2)) ? $form->surname2 : null;
+	 			$phone = (isset($form->phone)) ? $form->phone : null;
+	 			$identification = (isset($form->identification)) ? $form->identification : null;
+	 			$profession = (isset($form->profession)) ? $form->profession : null;
+
+				if ($email != null) {
+					$User->setLogin($login);
+					$User->setEmail($email);
+					$User->setRole($rol);
+					$User->setIsActive(1);
+			 		if ($form->type == '1') {
+						$User->getUserData()->setName($name);
+						$User->getUserData()->setSurname($surname);
+						$User->getUserData()->setPhone($phone);
+
+					} elseif ($form->type == '2') {
+						$User->getFacilitator()->setIdentification($identification);
+						$User->getFacilitator()->setName($name);
+						$User->getFacilitator()->setSurname($surname);
+						$User->getFacilitator()->setPhone($phone);
+						$User->getFacilitator()->setProfession($profession);
+						$User->getFacilitator()->setUpdateTime($updateAt);
+						$User->getFacilitator()->setUser($user_update);
+
+					} elseif ($form->type == '3') {
+						$User->getStudent()->setName($name);
+						$User->getStudent()->setName2($name2);
+						$User->getStudent()->setSurname($surname);
+						$User->getStudent()->setSurname2($surname2);
+						$User->getStudent()->setPhone($phone);
+						$User->getStudent()->setIdentification($identification);
+						$User->getStudent()->setUpdateTime($updateAt);
+						$User->getStudent()->setUser($user_update);
+
+					}
+
+					$em->persist($User);
+					$em->flush();
+					$helpers->binnacleAction('User','actualización',$updateAt,'Modificando datos de usuario.',$identity->id);
+					$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => 'Usuario actualizado.'
+		 			);
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+
 			
 }
 

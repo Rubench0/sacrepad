@@ -22,6 +22,7 @@ class srcApp_KernelDevDebugContainerUrlMatcher extends Symfony\Bundle\FrameworkB
             '/user/all' => array(array(array('_route' => 'user_all', '_controller' => 'App\\Controller\\UsersController::UserAll'), null, array('POST' => 0), null, false, false, null)),
             '/user/get' => array(array(array('_route' => 'user_get', '_controller' => 'App\\Controller\\UsersController::UserGet'), null, array('POST' => 0), null, false, false, null)),
             '/user/changepassword' => array(array(array('_route' => 'user_changepassword', '_controller' => 'App\\Controller\\UsersController::UserChangePassword'), null, array('POST' => 0), null, false, false, null)),
+            '/user/edit' => array(array(array('_route' => 'user_edit', '_controller' => 'App\\Controller\\UsersController::UserEdit'), null, array('POST' => 0), null, false, false, null)),
             '/_profiler' => array(array(array('_route' => '_profiler_home', '_controller' => 'web_profiler.controller.profiler::homeAction'), null, null, null, true, false, null)),
             '/_profiler/search' => array(array(array('_route' => '_profiler_search', '_controller' => 'web_profiler.controller.profiler::searchAction'), null, null, null, false, false, null)),
             '/_profiler/search_bar' => array(array(array('_route' => '_profiler_search_bar', '_controller' => 'web_profiler.controller.profiler::searchBarAction'), null, null, null, false, false, null)),
