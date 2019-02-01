@@ -501,15 +501,23 @@ class UsersController extends AbstractController {
 			$form = json_decode($json);
 			$identity = $jwtauth->checkToken($token, true);
 			$login_user = $form->login;
-			$user =  $em->getRepository(User::class)->findOneById($form->id);
-			$em->remove($user);
-			$em->flush();
-			$helpers->binnacleAction('User','consulta',$createdAt,'Se elimino el usuario '.$login_user.'.',$identity->id);
-			$response = array(
-				'status' => 'success',
-				'code' => 200,
-				'data' => 'Usuario eliminado.',
-			);
+			if ($form->type != '1') {
+				$user =  $em->getRepository(User::class)->findOneById($form->id);
+				$em->remove($user);
+				$em->flush();
+				$helpers->binnacleAction('User','consulta',$createdAt,'Se elimino el usuario '.$login_user.'.',$identity->id);
+				$response = array(
+					'status' => 'success',
+					'code' => 200,
+					'data' => 'Usuario eliminado.',
+				);
+			} else {
+				$response = array(
+					'status' => 'error',
+					'code' => 400,
+					'msg' => 'No puede eliminar este usuario.',
+				);
+			}
 		} else {
 			$response = array(
 				'status' => 'error',

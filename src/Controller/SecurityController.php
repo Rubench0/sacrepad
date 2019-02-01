@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Service\Helpers;
 use App\Service\JwtAuth;
+use App\Entity\BinnacleActions;
 
 
 class SecurityController extends AbstractController
@@ -62,5 +63,44 @@ class SecurityController extends AbstractController
 		// return $this->render('main/index.html.twig', [
 		//     'controller_name' => $variable,
 		// ]);
+	}
+
+	/**
+	 * @Route("/security/binnacle/actions", name="security_binnacle_actions", methods={"POST"})
+	 */
+	public function binnacleActions(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$users =  $em->getRepository(BinnacleActions::class)->findAll();
+			foreach ($users as $key => $value) {
+				$data[] = [
+					'id' => $users[$key]->getId(),
+					'user' => $users[$key]->getUser()->getLogin(),
+					'model' => $users[$key]->getEntity(),
+					'action' => $users[$key]->getAction(),
+					'date' => $users[$key]->getDate(),
+					'description' => $users[$key]->getDescription(),
+				];
+			}
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
 	}
 }

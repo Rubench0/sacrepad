@@ -17,6 +17,7 @@ class srcApp_KernelDevDebugContainerUrlMatcher extends Symfony\Bundle\FrameworkB
         $this->staticRoutes = array(
             '/main' => array(array(array('_route' => 'main', '_controller' => 'App\\Controller\\MainController::index'), null, array('POST' => 0), null, false, false, null)),
             '/login' => array(array(array('_route' => 'login', '_controller' => 'App\\Controller\\SecurityController::login'), null, array('POST' => 0), null, false, false, null)),
+            '/security/binnacle/actions' => array(array(array('_route' => 'security_binnacle_actions', '_controller' => 'App\\Controller\\SecurityController::binnacleActions'), null, array('POST' => 0), null, false, false, null)),
             '/user/new' => array(array(array('_route' => 'user_new', '_controller' => 'App\\Controller\\UsersController::UserRegistry'), null, array('POST' => 0), null, false, false, null)),
             '/user/profile/edit' => array(array(array('_route' => 'user_profile_edit', '_controller' => 'App\\Controller\\UsersController::UserProfileUpdate'), null, array('POST' => 0), null, false, false, null)),
             '/user/all' => array(array(array('_route' => 'user_all', '_controller' => 'App\\Controller\\UsersController::UserAll'), null, array('POST' => 0), null, false, false, null)),
