@@ -56,7 +56,7 @@ class UsersController extends AbstractController {
 				$emailConstraint->message = 'El email no es valido';
 				$validate_email = $validator->validate($email, $emailConstraint);
 
-				if ($email != null && count($validate_email) == 0 && $password != null && $name != null && $surname != null && $rol != null && $login != null && $phone != null) {
+				if ($email != null && count($validate_email) == 0) {
 
 					$em = $this->getDoctrine()->getManager();
 					$User = new User();
@@ -70,6 +70,8 @@ class UsersController extends AbstractController {
 				    		$em->flush();
 							$User->setUserData($Userdata);
 							$helpers->binnacleAction('UserData','registro',$createdAt,'Agregando datos de usuario para la relación con usuario.',$identity->id);
+							$password = hash('sha256', $password);
+							$User->setPassword($password);
 							break;
 						case '2':
 							$Facilitator = new Facilitator();
@@ -86,6 +88,8 @@ class UsersController extends AbstractController {
 				    		$em->flush();
 							$User->setFacilitator($Facilitator);
 							$helpers->binnacleAction('Facilitator','registro',$createdAt,'Agregando datos de usuario facilitador.',$identity->id);
+							$password = hash('sha256', $identification);
+							$User->setPassword($password);
 							break;
 						case '3':
 							$Student = new Student();
@@ -104,11 +108,11 @@ class UsersController extends AbstractController {
 				    		$em->flush();
 							$User->setStudent($Student);
 							$helpers->binnacleAction('Student','registro',$createdAt,'Agregando datos de usuario estudiante.',$identity->id);
+							$password = hash('sha256', $identification);
+							$User->setPassword($password);
 							break;
 					}
 					$User->setLogin($login);
-					$password = hash('sha256', $password);
-					$User->setPassword($password);
 					$User->setEmail($email); 
 					$User->setIsActive(1);
 					$User->setRole($rol);

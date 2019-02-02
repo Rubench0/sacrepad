@@ -4045,6 +4045,7 @@
     </service>
     <service id=".abstract.instanceof.App\Controller\MainController" class="App\Controller\MainController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\StudyControlController" class="App\Controller\StudyControlController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id="App\Service\Helpers" class="App\Service\Helpers" autowire="true" autoconfigure="true">
       <argument type="service" id="doctrine.orm.default_entity_manager"/>
@@ -4067,13 +4068,15 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.2w9_HA0" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.0B4m_mt" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\MainController::index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::login" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController::FacilitatorRegistry" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController::facilitatorsAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserChangePassword" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4085,6 +4088,8 @@
         <argument key="App\Controller\SecurityController:binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:login" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController:FacilitatorRegistry" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController:facilitatorsAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserChangePassword" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4494,6 +4499,15 @@
         <argument type="service" id=".service_locator.KTVqfp6.App\Controller\SecurityController"/>
       </call>
     </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\StudyControlController" class="App\Controller\StudyControlController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\StudyControlController" class="App\Controller\StudyControlController" autowire="true" abstract="true"/>
+    <service id="App\Controller\StudyControlController" class="App\Controller\StudyControlController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.KTVqfp6.App\Controller\StudyControlController"/>
+      </call>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\UsersController" class="App\Controller\UsersController" autowire="true" abstract="true"/>
     <service id="App\Controller\UsersController" class="App\Controller\UsersController" public="true" autowire="true" autoconfigure="true">
@@ -4887,6 +4901,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.KTVqfp6" method="withContext"/>
     </service>
+    <service id=".service_locator.KTVqfp6.App\Controller\StudyControlController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\StudyControlController"/>
+      <argument>App\Controller\StudyControlController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.KTVqfp6" method="withContext"/>
+    </service>
     <service id=".service_locator.KTVqfp6.App\Controller\UsersController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator_context" id="App\Controller\UsersController"/>
       <argument>App\Controller\UsersController</argument>
@@ -4931,7 +4951,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.2w9_HA0"/>
+      <argument type="service" id=".service_locator.0B4m_mt"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5270,7 +5290,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.2w9_HA0"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.0B4m_mt"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>
