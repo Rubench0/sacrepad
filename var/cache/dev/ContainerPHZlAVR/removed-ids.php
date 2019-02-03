@@ -34,7 +34,7 @@ return array(
     '.security.request_matcher.Iy.T22O' => true,
     '.service_locator.1ioWPMn' => true,
     '.service_locator.9_yeNH1' => true,
-    '.service_locator.DuT423n' => true,
+    '.service_locator.EdcxlbD' => true,
     '.service_locator.HKoUR8q' => true,
     '.service_locator.KTVqfp6' => true,
     '.service_locator.KTVqfp6.App\\Controller\\MainController' => true,

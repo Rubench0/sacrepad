@@ -4068,15 +4068,15 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.0B4m_mt" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.Vho.CFU" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\MainController::index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::login" type="service" id=".service_locator.nx_RgZP"/>
-        <argument key="App\Controller\StudyControlController::FacilitatorRegistry" type="service" id=".service_locator.nx_RgZP"/>
         <argument key="App\Controller\StudyControlController::facilitatorsAll" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController::studentsAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserChangePassword" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4088,8 +4088,8 @@
         <argument key="App\Controller\SecurityController:binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:login" type="service" id=".service_locator.nx_RgZP"/>
-        <argument key="App\Controller\StudyControlController:FacilitatorRegistry" type="service" id=".service_locator.nx_RgZP"/>
         <argument key="App\Controller\StudyControlController:facilitatorsAll" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController:studentsAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserChangePassword" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController:UserDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4951,7 +4951,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.0B4m_mt"/>
+      <argument type="service" id=".service_locator.Vho.CFU"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5290,7 +5290,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.0B4m_mt"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Vho.CFU"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>
