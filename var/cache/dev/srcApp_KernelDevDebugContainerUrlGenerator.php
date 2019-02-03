@@ -20,6 +20,8 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         $this->defaultLocale = $defaultLocale;
         if (null === self::$declaredRoutes) {
             self::$declaredRoutes = array(
+        'configuration_days_new' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DaysRegistry'), array(), array(array('text', '/configuration/days/new')), array(), array()),
+        'configuration_view_days' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DaysView'), array(), array(array('text', '/configuration/days')), array(), array()),
         'main' => array(array(), array('_controller' => 'App\\Controller\\MainController::index'), array(), array(array('text', '/main')), array(), array()),
         'login' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::login'), array(), array(array('text', '/login')), array(), array()),
         'security_binnacle_actions' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleActions'), array(), array(array('text', '/security/binnacle/actions')), array(), array()),

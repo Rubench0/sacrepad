@@ -1659,6 +1659,6 @@ class __TwigTemplate_f5ad5b173ce29560a21c2d4be83aa83dfe8f1eae5d32320e3d86fcc97d7
         </tbody>
     </table>
 {% endmacro %}
-", "@Doctrine/Collector/db.html.twig", "/var/www/html/sacrepad/vendor/doctrine/doctrine-bundle/Resources/views/Collector/db.html.twig");
+", "@Doctrine/Collector/db.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/doctrine/doctrine-bundle/Resources/views/Collector/db.html.twig");
     }
 }

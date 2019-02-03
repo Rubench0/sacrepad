@@ -65,6 +65,6 @@ class __TwigTemplate_bea045d67aa61d628b6683e5a02b305399d7efc0d5d8a73f0176954153d
         return new Twig_Source("<?xml version=\"1.0\" encoding=\"{{ _charset }}\" ?>
 
 <error code=\"{{ status_code }}\" message=\"{{ status_text }}\" />
-", "@Twig/Exception/error.xml.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/error.xml.twig");
+", "@Twig/Exception/error.xml.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/error.xml.twig");
     }
 }

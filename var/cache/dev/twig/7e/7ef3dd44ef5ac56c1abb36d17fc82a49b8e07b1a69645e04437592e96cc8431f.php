@@ -189,6 +189,6 @@ class __TwigTemplate_66d78f88c62e92d4fce02b54a8f70074bff3a031d12e52828f8b3c846e7
     {% endif %}
 </div>
 {% endif %}
-", "@KnpPaginator/Pagination/sliding.html.twig", "/var/www/html/sacrepad/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/sliding.html.twig");
+", "@KnpPaginator/Pagination/sliding.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/sliding.html.twig");
     }
 }

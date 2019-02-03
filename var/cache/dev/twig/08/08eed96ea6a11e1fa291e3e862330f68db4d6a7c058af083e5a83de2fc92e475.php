@@ -157,6 +157,6 @@ class __TwigTemplate_ba5f464de8959ea8cbb5b7a7f1a8b2dd97cb15842a74ded1ee80b020524
         {%- endfor -%}
     </pre>
 {% endif %}
-", "@Doctrine/Collector/explain.html.twig", "/var/www/html/sacrepad/vendor/doctrine/doctrine-bundle/Resources/views/Collector/explain.html.twig");
+", "@Doctrine/Collector/explain.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/doctrine/doctrine-bundle/Resources/views/Collector/explain.html.twig");
     }
 }

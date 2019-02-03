@@ -190,6 +190,6 @@ class __TwigTemplate_00ce02505c14e8488d6bef25203b227d577ed9d287f60a4400fdc1094b5
         })|raw }}
     </div>
 {% endif %}
-", "@Twig/Exception/trace.html.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/trace.html.twig");
+", "@Twig/Exception/trace.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/trace.html.twig");
     }
 }

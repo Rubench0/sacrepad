@@ -49,6 +49,6 @@ class __TwigTemplate_7e12362e446ade463b4248f0e9f99dbc12d579276df01faa7d551be1439
     public function getSourceContext()
     {
         return new Twig_Source("<?php echo \$view['form']->widget(\$form) ?>
-", "@Framework/Form/hidden_row.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/hidden_row.html.php");
+", "@Framework/Form/hidden_row.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/hidden_row.html.php");
     }
 }

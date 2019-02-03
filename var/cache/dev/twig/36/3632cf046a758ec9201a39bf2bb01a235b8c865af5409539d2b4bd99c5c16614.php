@@ -992,6 +992,6 @@ class __TwigTemplate_1f67174ee1d406289af5f6ae4547eb0db12bd60dc7a4617254c60e5bc45
         {% endif %}
     {% endfor %}
 {% endblock %}
-", "@Swiftmailer/Collector/swiftmailer.html.twig", "/var/www/html/sacrepad/vendor/symfony/swiftmailer-bundle/Resources/views/Collector/swiftmailer.html.twig");
+", "@Swiftmailer/Collector/swiftmailer.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/swiftmailer-bundle/Resources/views/Collector/swiftmailer.html.twig");
     }
 }

@@ -45,6 +45,6 @@ class __TwigTemplate_2d6a08c2c211fabc77fe6532a01428653e7d31238a543f35dd074a2d4d3
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "@Framework/Form/button_label.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/button_label.html.php");
+        return new Twig_Source("", "@Framework/Form/button_label.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/button_label.html.php");
     }
 }

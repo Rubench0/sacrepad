@@ -15,6 +15,8 @@ class srcApp_KernelDevDebugContainerUrlMatcher extends Symfony\Bundle\FrameworkB
     {
         $this->context = $context;
         $this->staticRoutes = array(
+            '/configuration/days/new' => array(array(array('_route' => 'configuration_days_new', '_controller' => 'App\\Controller\\ConfigurationController::DaysRegistry'), null, array('POST' => 0), null, false, false, null)),
+            '/configuration/days' => array(array(array('_route' => 'configuration_view_days', '_controller' => 'App\\Controller\\ConfigurationController::DaysView'), null, array('POST' => 0), null, false, false, null)),
             '/main' => array(array(array('_route' => 'main', '_controller' => 'App\\Controller\\MainController::index'), null, array('POST' => 0), null, false, false, null)),
             '/login' => array(array(array('_route' => 'login', '_controller' => 'App\\Controller\\SecurityController::login'), null, array('POST' => 0), null, false, false, null)),
             '/security/binnacle/actions' => array(array(array('_route' => 'security_binnacle_actions', '_controller' => 'App\\Controller\\SecurityController::binnacleActions'), null, array('POST' => 0), null, false, false, null)),

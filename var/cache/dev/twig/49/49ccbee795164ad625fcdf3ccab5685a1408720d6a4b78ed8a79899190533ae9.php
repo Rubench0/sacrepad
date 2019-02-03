@@ -1111,6 +1111,6 @@ class __TwigTemplate_ef9bfa3a62f47246312e5a1d96ff99a39780bf91bed06caa11355437b59
         <span>{{ route|default(controller) }}</span>
     {%- endif %}
 {% endmacro %}
-", "@WebProfiler/Collector/request.html.twig", "/var/www/html/sacrepad/vendor/symfony/web-profiler-bundle/Resources/views/Collector/request.html.twig");
+", "@WebProfiler/Collector/request.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/web-profiler-bundle/Resources/views/Collector/request.html.twig");
     }
 }

@@ -57,6 +57,6 @@ class __TwigTemplate_a0eae2d9f6a63f411c0bfa7a66a7a8047b0fcdf6653425fd6e5a2908c58
     <?php if (strlen(\$value) > 0): ?> value=\"<?php echo \$view->escape(\$value) ?>\"<?php endif ?>
     <?php if (\$checked): ?> checked=\"checked\"<?php endif ?>
 />
-", "@Framework/Form/checkbox_widget.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/checkbox_widget.html.php");
+", "@Framework/Form/checkbox_widget.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/checkbox_widget.html.php");
     }
 }

@@ -55,6 +55,6 @@ class __TwigTemplate_7e1d109fe9b09e35ca79c6b8ddd47a85f90df130e78e88de5a63cfdca13
     public function getSourceContext()
     {
         return new Twig_Source("{{ { 'error': { 'code': status_code, 'message': status_text } }|json_encode|raw }}
-", "@Twig/Exception/error.json.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/error.json.twig");
+", "@Twig/Exception/error.json.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/error.json.twig");
     }
 }

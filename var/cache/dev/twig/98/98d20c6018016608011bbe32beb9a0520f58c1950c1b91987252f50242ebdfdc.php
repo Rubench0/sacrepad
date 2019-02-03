@@ -121,6 +121,6 @@ class __TwigTemplate_1fa48244e079349ee93a44bc46d6786257dfb301ad3585f458855f78ebb
 .exception-message-wrapper .container {
     min-height: auto;
 }
-", "@WebProfiler/Collector/exception.css.twig", "/var/www/html/sacrepad/vendor/symfony/web-profiler-bundle/Resources/views/Collector/exception.css.twig");
+", "@WebProfiler/Collector/exception.css.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/web-profiler-bundle/Resources/views/Collector/exception.css.twig");
     }
 }

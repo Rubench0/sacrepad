@@ -49,6 +49,6 @@ class __TwigTemplate_05c2c2fb340b47556c1708657ec4b8442b0c2ac3d7bbf9609629597db47
     public function getSourceContext()
     {
         return new Twig_Source("<?php echo \$view['form']->block(\$form, 'form_widget_simple', array('type' => isset(\$type) ? \$type : 'email')) ?>
-", "@Framework/Form/email_widget.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/email_widget.html.php");
+", "@Framework/Form/email_widget.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/email_widget.html.php");
     }
 }

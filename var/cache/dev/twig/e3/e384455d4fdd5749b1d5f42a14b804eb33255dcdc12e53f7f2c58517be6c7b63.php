@@ -57,6 +57,6 @@ class __TwigTemplate_666ebee8ee8939217c7d69d7c30e47f644fa441b7ed386895768f370f30
 <?php else: ?>
 <?php echo \$view['form']->block(\$form, 'choice_widget_collapsed') ?>
 <?php endif ?>
-", "@Framework/Form/choice_widget.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/choice_widget.html.php");
+", "@Framework/Form/choice_widget.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/choice_widget.html.php");
     }
 }

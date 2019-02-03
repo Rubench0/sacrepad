@@ -1911,6 +1911,14 @@
         <argument>2048</argument>
       </call>
       <call method="addListener">
+        <argument>console.command</argument>
+        <argument type="collection">
+          <argument type="service" id="debug.debug_handlers_listener"/>
+          <argument>configure</argument>
+        </argument>
+        <argument>2048</argument>
+      </call>
+      <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument type="service" id="router_listener"/>
@@ -4043,6 +4051,7 @@
     <service id="EasyCorp\EasyLog\EasyLogHandler" class="EasyCorp\EasyLog\EasyLogHandler" public="false">
       <argument>/var/www/html/sacrepad/sacrepad-api/var/log/dev.log</argument>
     </service>
+    <service id=".abstract.instanceof.App\Controller\ConfigurationController" class="App\Controller\ConfigurationController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\MainController" class="App\Controller\MainController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\StudyControlController" class="App\Controller\StudyControlController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -4068,9 +4077,11 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.Vho.CFU" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.7riyhh0" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Controller\ConfigurationController::DaysRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::DaysView" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\MainController::index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
@@ -4084,6 +4095,8 @@
         <argument key="App\Controller\UsersController::UserGet" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserProfileUpdate" type="service" id=".service_locator.nx_RgZP"/>
         <argument key="App\Controller\UsersController::UserRegistry" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\ConfigurationController:DaysRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:DaysView" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\MainController:index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
@@ -4479,6 +4492,15 @@
       </call>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.main"/>
+      </call>
+    </service>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\ConfigurationController" class="App\Controller\ConfigurationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\ConfigurationController" class="App\Controller\ConfigurationController" autowire="true" abstract="true"/>
+    <service id="App\Controller\ConfigurationController" class="App\Controller\ConfigurationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.KTVqfp6.App\Controller\ConfigurationController"/>
       </call>
     </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\MainController" class="App\Controller\MainController" autowire="true" abstract="true"/>
@@ -4889,6 +4911,12 @@
         <argument key="twig" type="service" id="twig" on-invalid="ignore"/>
       </argument>
     </service>
+    <service id=".service_locator.KTVqfp6.App\Controller\ConfigurationController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+      <tag name="container.service_locator_context" id="App\Controller\ConfigurationController"/>
+      <argument>App\Controller\ConfigurationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.KTVqfp6" method="withContext"/>
+    </service>
     <service id=".service_locator.KTVqfp6.App\Controller\MainController" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator_context" id="App\Controller\MainController"/>
       <argument>App\Controller\MainController</argument>
@@ -4951,7 +4979,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.Vho.CFU"/>
+      <argument type="service" id=".service_locator.7riyhh0"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5290,7 +5318,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Vho.CFU"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.7riyhh0"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>

@@ -65,6 +65,6 @@ class __TwigTemplate_7f6cb037e6ad6aa2a92399c25aa6b8d9f30cd98e608b36a9b12f2431dd9
 {{ status_code }} {{ status_text }}
 
 */
-", "@Twig/Exception/error.js.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
+", "@Twig/Exception/error.js.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
     }
 }

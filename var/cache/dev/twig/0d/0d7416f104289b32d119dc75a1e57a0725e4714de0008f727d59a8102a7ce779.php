@@ -57,6 +57,6 @@ class __TwigTemplate_9966f288bfc798c10dabb6861fe9a38ff6e8bad16be5c037a52e28f8fc4
     value=\"<?php echo \$view->escape(\$value) ?>\"
     <?php if (\$checked): ?> checked=\"checked\"<?php endif ?>
 />
-", "@Framework/Form/radio_widget.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/radio_widget.html.php");
+", "@Framework/Form/radio_widget.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/radio_widget.html.php");
     }
 }

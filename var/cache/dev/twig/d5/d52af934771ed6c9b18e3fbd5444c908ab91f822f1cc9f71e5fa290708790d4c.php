@@ -49,6 +49,6 @@ class __TwigTemplate_7db5345fa43bc6b62834fd2a70d79386be580123974ee51946e5828ef7b
     public function getSourceContext()
     {
         return new Twig_Source("<?php echo \$view['form']->block(\$form, 'form_widget_simple', array('type' => isset(\$type) ? \$type : 'password')) ?>
-", "@Framework/Form/password_widget.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/password_widget.html.php");
+", "@Framework/Form/password_widget.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/password_widget.html.php");
     }
 }

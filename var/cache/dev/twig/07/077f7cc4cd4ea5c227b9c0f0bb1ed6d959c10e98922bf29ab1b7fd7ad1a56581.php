@@ -315,6 +315,6 @@ class __TwigTemplate_66ff2a77023c19c845c43dad9f3c77ca396eb4b2ea42468f6162fc9fa1f
     </ul>
 </div>
 {% endif %}
-", "@KnpPaginator/Pagination/twitter_bootstrap_pagination.html.twig", "/var/www/html/sacrepad/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/twitter_bootstrap_pagination.html.twig");
+", "@KnpPaginator/Pagination/twitter_bootstrap_pagination.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/twitter_bootstrap_pagination.html.twig");
     }
 }

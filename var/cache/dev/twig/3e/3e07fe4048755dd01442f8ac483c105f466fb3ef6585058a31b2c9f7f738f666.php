@@ -138,6 +138,6 @@ class __TwigTemplate_4e34278059f2c9ebcbb3d78d3cec5c512f5fd80554954047dc372415012
 {% block panel %}
     {{ render(path('_profiler_router', { token: token })) }}
 {% endblock %}
-", "@WebProfiler/Collector/router.html.twig", "/var/www/html/sacrepad/vendor/symfony/web-profiler-bundle/Resources/views/Collector/router.html.twig");
+", "@WebProfiler/Collector/router.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/web-profiler-bundle/Resources/views/Collector/router.html.twig");
     }
 }

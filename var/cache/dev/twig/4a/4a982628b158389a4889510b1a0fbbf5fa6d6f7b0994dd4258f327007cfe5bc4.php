@@ -138,6 +138,6 @@ class __TwigTemplate_e962e2ea0c05c29414a3b5b1cd3253ac568c0257c6314df5d25804bf254
     </ul>
 </div>
 {% endblock %}
-", "main/index.html.twig", "/var/www/html/sacrepad/templates/main/index.html.twig");
+", "main/index.html.twig", "/var/www/html/sacrepad/sacrepad-api/templates/main/index.html.twig");
     }
 }

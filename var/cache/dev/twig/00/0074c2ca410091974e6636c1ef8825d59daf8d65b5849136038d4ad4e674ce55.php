@@ -452,6 +452,6 @@ class __TwigTemplate_1d40a9fc35f000e0677b0c3f8d9278d7f8707f5618e687bd52ab3cd84c4
         </div>
     {% endif %}
 {% endblock %}
-", "@WebProfiler/Collector/twig.html.twig", "/var/www/html/sacrepad/vendor/symfony/web-profiler-bundle/Resources/views/Collector/twig.html.twig");
+", "@WebProfiler/Collector/twig.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/web-profiler-bundle/Resources/views/Collector/twig.html.twig");
     }
 }

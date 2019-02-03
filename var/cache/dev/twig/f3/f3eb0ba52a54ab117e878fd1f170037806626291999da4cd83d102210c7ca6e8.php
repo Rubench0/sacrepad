@@ -55,6 +55,6 @@ class __TwigTemplate_923efd81836d6f3589bca9e80f2dcf803d9b57fef7155b0e8675eb1535d
     public function getSourceContext()
     {
         return new Twig_Source("{{ include('@Twig/Exception/error.xml.twig') }}
-", "@Twig/Exception/error.rdf.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/error.rdf.twig");
+", "@Twig/Exception/error.rdf.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/error.rdf.twig");
     }
 }

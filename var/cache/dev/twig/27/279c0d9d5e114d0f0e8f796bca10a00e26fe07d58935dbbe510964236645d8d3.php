@@ -210,6 +210,6 @@ class __TwigTemplate_7161e42775b4f793ea6671afe0c3cabe5d0432653075572f781d59d51bb
         {{ include('@Twig/base_js.html.twig') }}
     </body>
 </html>
-", "@Twig/layout.html.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/layout.html.twig");
+", "@Twig/layout.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/layout.html.twig");
     }
 }

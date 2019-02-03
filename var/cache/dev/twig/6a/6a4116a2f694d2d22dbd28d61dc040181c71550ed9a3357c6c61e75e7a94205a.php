@@ -49,6 +49,6 @@ class __TwigTemplate_a29eaa12ba629b83b771119b9830305208fb03218a0823ff567f86bb9ac
     public function getSourceContext()
     {
         return new Twig_Source("<?php echo \$view['form']->block(\$form, 'choice_widget_options') ?>
-", "@Framework/Form/choice_options.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/choice_options.html.php");
+", "@Framework/Form/choice_options.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/choice_options.html.php");
     }
 }

@@ -111,6 +111,6 @@ class __TwigTemplate_96ae3175a54078578f1179f5bbc001b3f0db6df34605a0b011dde10ef22
         </div>
     </body>
 </html>
-", "@Twig/Exception/error.html.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/error.html.twig");
+", "@Twig/Exception/error.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/error.html.twig");
     }
 }

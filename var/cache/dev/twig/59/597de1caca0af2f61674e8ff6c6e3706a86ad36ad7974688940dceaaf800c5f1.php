@@ -312,6 +312,6 @@ class __TwigTemplate_2b2dc781d30f7f83ca740fda10cc55c4a84e92a54d9c02c1673fdd03cf6
         </ul>
     </nav>
 {% endif %}
-", "@KnpPaginator/Pagination/bulma_pagination.html.twig", "/var/www/html/sacrepad/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/bulma_pagination.html.twig");
+", "@KnpPaginator/Pagination/bulma_pagination.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/knplabs/knp-paginator-bundle/Resources/views/Pagination/bulma_pagination.html.twig");
     }
 }

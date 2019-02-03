@@ -155,6 +155,6 @@ class __TwigTemplate_0f5d9dd816d8ab2f91433ebafe4cedf5ea2b6efe9bdc04072327bf2eaaf
         {% block javascripts %}{% endblock %}
     </body>
 </html>
-", "base.html.twig", "/var/www/html/sacrepad/templates/base.html.twig");
+", "base.html.twig", "/var/www/html/sacrepad/sacrepad-api/templates/base.html.twig");
     }
 }

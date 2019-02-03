@@ -2026,6 +2026,6 @@ class __TwigTemplate_59d8fc1a6617a9cbd5c72540898a484ca8bc1dad5665ca538a191f0fe60
         {{ tree.form_tree_details(childName, childData, forms_by_hash) }}
     {% endfor %}
 {% endmacro %}
-", "@WebProfiler/Collector/form.html.twig", "/var/www/html/sacrepad/vendor/symfony/web-profiler-bundle/Resources/views/Collector/form.html.twig");
+", "@WebProfiler/Collector/form.html.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/web-profiler-bundle/Resources/views/Collector/form.html.twig");
     }
 }

@@ -90,6 +90,6 @@ class __TwigTemplate_cb23bdf1e7921ddb2be39a3aad30a89921c42994b3a7dbc185d4bfe9ba4
   {{ include('@Twig/Exception/trace.txt.twig', { trace: trace }, with_context = false) }}
 {% endfor %}
 {% endif %}
-", "@Twig/Exception/traces.txt.twig", "/var/www/html/sacrepad/vendor/symfony/twig-bundle/Resources/views/Exception/traces.txt.twig");
+", "@Twig/Exception/traces.txt.twig", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/twig-bundle/Resources/views/Exception/traces.txt.twig");
     }
 }

@@ -63,6 +63,6 @@ class __TwigTemplate_4f95966fce7b1ed7994434cb36ff8cdc142ee58bb667510641b1c62dfaa
 <?php printf('%s=\"%s\" ', \$view->escape(\$k), \$view->escape(\$v)) ?>
 <?php endif ?>
 <?php endforeach ?>
-", "@Framework/Form/choice_attributes.html.php", "/var/www/html/sacrepad/vendor/symfony/framework-bundle/Resources/views/Form/choice_attributes.html.php");
+", "@Framework/Form/choice_attributes.html.php", "/var/www/html/sacrepad/sacrepad-api/vendor/symfony/framework-bundle/Resources/views/Form/choice_attributes.html.php");
     }
 }
