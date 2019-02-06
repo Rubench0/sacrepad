@@ -4077,11 +4077,18 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.7riyhh0" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.s8xuSHZ" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Controller\ConfigurationController::ClassSubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::ClassSubjectView" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::DataDelete" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::DataEdit" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::DataGet" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\ConfigurationController::DaysRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\ConfigurationController::DaysView" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::TypeSubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController::TypeSubjectView" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\MainController::index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
@@ -4095,8 +4102,15 @@
         <argument key="App\Controller\UsersController::UserGet" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\UsersController::UserProfileUpdate" type="service" id=".service_locator.nx_RgZP"/>
         <argument key="App\Controller\UsersController::UserRegistry" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\ConfigurationController:ClassSubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:ClassSubjectView" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:DataDelete" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:DataEdit" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:DataGet" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\ConfigurationController:DaysRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\ConfigurationController:DaysView" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:TypeSubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\ConfigurationController:TypeSubjectView" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\MainController:index" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
@@ -4979,7 +4993,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.7riyhh0"/>
+      <argument type="service" id=".service_locator.s8xuSHZ"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5318,7 +5332,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.7riyhh0"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.s8xuSHZ"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>

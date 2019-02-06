@@ -78,7 +78,6 @@ class UsersController extends AbstractController {
 							$Facilitator->setIdentification($identification);
 							$Facilitator->setName($name);
 							$Facilitator->setSurname($surname);
-							$Facilitator->setEmail($email);
 							$Facilitator->setPhone($phone);
 							$Facilitator->setProfession($profession);
 							$Facilitator->setCreateTime($createdAt);
@@ -98,7 +97,6 @@ class UsersController extends AbstractController {
 							$Student->setName2($name2);
 							$Student->setSurname($surname);
 							$Student->setSurname2($surname2);
-							$Student->setEmail($email);
 							$Student->setPhone($phone);
 							$Student->setAdmitted(0);
 							$Student->setCreateTime($createdAt);

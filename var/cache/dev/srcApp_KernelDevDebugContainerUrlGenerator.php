@@ -22,6 +22,13 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
             self::$declaredRoutes = array(
         'configuration_days_new' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DaysRegistry'), array(), array(array('text', '/configuration/days/new')), array(), array()),
         'configuration_view_days' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DaysView'), array(), array(array('text', '/configuration/days')), array(), array()),
+        'configuration_get_data' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DataGet'), array(), array(array('text', '/configuration/get/data')), array(), array()),
+        'configuration_edit_data' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DataEdit'), array(), array(array('text', '/configuration/edit/data')), array(), array()),
+        'configuration_delete_data' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::DataDelete'), array(), array(array('text', '/configuration/delete/data')), array(), array()),
+        'configuration_nclasssubject_new' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::ClassSubjectRegistry'), array(), array(array('text', '/configuration/nclasssubject/new')), array(), array()),
+        'configuration_view_nclasssubject' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::ClassSubjectView'), array(), array(array('text', '/configuration/nclasssubject')), array(), array()),
+        'configuration_typesubject_new' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::TypeSubjectRegistry'), array(), array(array('text', '/configuration/typesubject/new')), array(), array()),
+        'configuration_view_typesubject' => array(array(), array('_controller' => 'App\\Controller\\ConfigurationController::TypeSubjectView'), array(), array(array('text', '/configuration/typesubject')), array(), array()),
         'main' => array(array(), array('_controller' => 'App\\Controller\\MainController::index'), array(), array(array('text', '/main')), array(), array()),
         'login' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::login'), array(), array(array('text', '/login')), array(), array()),
         'security_binnacle_actions' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleActions'), array(), array(array('text', '/security/binnacle/actions')), array(), array()),

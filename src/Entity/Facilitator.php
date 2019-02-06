@@ -45,13 +45,6 @@ class Facilitator
     /**
      * @var string|null
      *
-     * @ORM\Column(name="email", type="string", length=45, nullable=true)
-     */
-    private $email;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="phone", type="string", length=45, nullable=true)
      */
     private $phone;
@@ -124,18 +117,6 @@ class Facilitator
     public function setSurname(?string $surname): self
     {
         $this->surname = $surname;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }

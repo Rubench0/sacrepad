@@ -52,13 +52,6 @@ class Student
     /**
      * @var string|null
      *
-     * @ORM\Column(name="email", type="string", length=45, nullable=true)
-     */
-    private $email;
-
-    /**
-     * @var string|null
-     *
      * @ORM\Column(name="phone", type="string", length=45, nullable=true)
      */
     private $phone;
@@ -150,18 +143,6 @@ class Student
     public function setSurname2(?string $surname2): self
     {
         $this->surname2 = $surname2;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }
