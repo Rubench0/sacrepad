@@ -31,9 +31,9 @@ class BinnacleAccessUser
     /**
      * @var string|null
      *
-     * @ORM\Column(name="network_location", type="string", length=45, nullable=true)
+     * @ORM\Column(name="system", type="string", length=45, nullable=true)
      */
-    private $networkLocation;
+    private $system;
 
     /**
      * @var string|null
@@ -76,14 +76,14 @@ class BinnacleAccessUser
         return $this;
     }
 
-    public function getNetworkLocation(): ?string
+    public function getSystem(): ?string
     {
-        return $this->networkLocation;
+        return $this->system;
     }
 
-    public function setNetworkLocation(?string $networkLocation): self
+    public function setSystem(?string $system): self
     {
-        $this->networkLocation = $networkLocation;
+        $this->system = $system;
 
         return $this;
     }

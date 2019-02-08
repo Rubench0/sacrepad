@@ -11,6 +11,8 @@ use App\Service\JwtAuth;
 use App\Entity\NDays;
 use App\Entity\NClassificationSubject;
 use App\Entity\NTypesSubject;
+use App\Entity\NRequirementsStudent;
+use App\Entity\Cohort;
 use App\Entity\User;
 
 
@@ -153,6 +155,14 @@ class ConfigurationController extends AbstractController {
 					];
 					$helpers->binnacleAction('NTypesSubject','consulta',$createdAt,'Consultando lista de tipos de asignatura',$identity->id);
 				break;
+				case 'NRequirementsStudent':
+					$NRequirementsStudent =  $em->getRepository(NRequirementsStudent::class)->findOneById($id_data);
+					$data = [
+						'id' => $NRequirementsStudent->getId(),
+						'name' => $NRequirementsStudent->getName(),
+					];
+					$helpers->binnacleAction('NRequirementsStudent','consulta',$createdAt,'Consultando lista de requisitos de estudiante',$identity->id);
+				break;
 			}
 			$response = array(
 				'status' => 'success',
@@ -218,6 +228,14 @@ class ConfigurationController extends AbstractController {
 							$em->persist($entid);
 							$em->flush();
 							$helpers->binnacleAction($table_find,'actualización',$updateAt,'Modificando datos de tipo de asignatura.',$identity->id);
+						break;						
+						case 'NRequirementsStudent':
+	 						$entid =  $em->getRepository(NRequirementsStudent::class)->findOneById($form->id);
+			 				$entid->setName($form->name);
+			 				$entid->setUpdateTime($updateAt);
+							$em->persist($entid);
+							$em->flush();
+							$helpers->binnacleAction($table_find,'actualización',$updateAt,'Modificando datos de requisito de estudiante.',$identity->id);
 						break;
 					}
 	 				if ($table_find == '') {
@@ -268,6 +286,10 @@ class ConfigurationController extends AbstractController {
 				case 'NTypesSubject':
 					$Datas =  $em->getRepository(NTypesSubject::class)->findOneById($form->id);
 					$helpers->binnacleAction('NTypesSubject','elimino',$createdAt,'Se elimino tipo de asignatura ',$identity->id);
+				break;
+				case 'NRequirementsStudent':
+					$Datas =  $em->getRepository(NRequirementsStudent::class)->findOneById($form->id);
+					$helpers->binnacleAction('NRequirementsStudent','elimino',$createdAt,'Se elimino requisito de estudiante.',$identity->id);
 				break;
 			}
 			$em->remove($Datas);
@@ -484,8 +506,343 @@ class ConfigurationController extends AbstractController {
 
 		return $helpers->json($response);
 	}
+
 	
+	/**
+	 * @Route("/configuration/requirementstudent/new", name="configuration_requirementstudent_new", methods={"POST"})
+	 */
+	public function RequirementStudentRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+	 			$name = (isset($form->name)) ? $form->name : null;
+
+				if ($name != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(NRequirementsStudent::class)->findBy(array('name' => $name));
+					if (count($isset_data) == 0) {
+						$NRequirementsStudent = new NRequirementsStudent();
+						$NRequirementsStudent->setName($name);
+						$NRequirementsStudent->setCreateTime($createdAt);
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$NRequirementsStudent->setUser($user);
+						$em->persist($NRequirementsStudent);
+		    			$em->flush();
+		    			$helpers->binnacleAction('NRequirementsStudent','registro',$createdAt,'Registrando requerimiento de estudiante.',$identity->id);
+						$response = array(
+							'status' => 'success',
+							'code' => 200,
+							'msg' => 'Registro creado exitosamente.',
+			 			);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'code' => 400,
+							'msg' => 'El registro ya se encuentra en base de datos.',
+	 					);
+					}
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/requirementstudents", name="configuration_view_requirementstudent", methods={"POST"})
+	 */
+	public function RequirementStudentView(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$NRequirementsStudent =  $em->getRepository(NRequirementsStudent::class)->findAll();
+			foreach ($NRequirementsStudent as $key => $value) {
+				$data[] = [
+					'id' => $NRequirementsStudent[$key]->getId(),
+					'name' => $NRequirementsStudent[$key]->getName(),
+				];
+			}
+			$helpers->binnacleAction('NRequirementsStudent','consulta',$createdAt,'Consultando lista de requerimientos de estudiante.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/cohort/new", name="configuration_cohort_new", methods={"POST"})
+	 */
+	public function CohortRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+	 			$code = (isset($form->code)) ? $form->code : null;
+	 			$initialDate = (isset($form->initialDate)) ? $form->initialDate : null;
+	 			$finalDate = (isset($form->finalDate)) ? $form->finalDate : null;
+	 			$year = (isset($form->year)) ? $form->year : null;
+
+				if ($code != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(Cohort::class)->findBy(array('code' => $code));
+					if (count($isset_data) == 0) {
+						$Cohort = new Cohort();
+						$Cohort->setActive(1);
+						$dateini = new \Datetime($initialDate);
+						$Cohort->setInitialDate($dateini);
+						$datefin = new \Datetime($finalDate);
+						$Cohort->setFinalDate($datefin);
+						$Cohort->setYear($year);
+						$Cohort->setCode($code);
+						$Cohort->setCreateTime($createdAt);
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$Cohort->setUser($user);
+						$em->persist($Cohort);
+		    			$em->flush();
+		    			$helpers->binnacleAction('Cohort','registro',$createdAt,'Registrando cohorte '.$code.'.',$identity->id);
+						$response = array(
+							'status' => 'success',
+							'code' => 200,
+							'msg' => 'Registro creado exitosamente.',
+			 			);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'code' => 400,
+							'msg' => 'El registro ya se encuentra en base de datos.',
+	 					);
+					}
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/cohort", name="configuration_view_cohort", methods={"POST"})
+	 */
+	public function CohortView(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$Cohort =  $em->getRepository(Cohort::class)->findAll();
+			foreach ($Cohort as $key => $value) {
+				$data[] = [
+					'id' => $Cohort[$key]->getId(),
+					'active' => $Cohort[$key]->getActive(),
+					'initialDate' => $Cohort[$key]->getInitialDate(),
+					'finalDate' => $Cohort[$key]->getFinalDate(),
+					'year' => $Cohort[$key]->getYear(),
+					'code' => $Cohort[$key]->getCode(),
+				];
+			}
+			$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de cohortes.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/cohort/get", name="configuration_cohort_get", methods={"POST"})
+	 */
+	public function CohortGet(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_data = $request->request->get('id');
+			$identity = $jwtauth->checkToken($token, true);
+			$Cohort =  $em->getRepository(Cohort::class)->findOneById($id_data);
+			$data = [
+				'id' => $Cohort->getId(),
+				'active' => $Cohort->getActive(),
+				'initialDate' => $Cohort->getInitialDate(),
+				'finalDate' => $Cohort->getFinalDate(),
+				'year' => $Cohort->getYear(),
+				'code' => $Cohort->getCode(),
+			];
+			$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de cohortes',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/edit/cohort", name="configuration_edit_cohort", methods={"POST"})
+	 */
+	public function CohortEdit(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$json = $request->request->get('form');
+			$form = json_decode($json);
 			
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'Error al actualizar, dato vacio.',
+	 		);
+
+ 			$updateAt = new \Datetime('now');
+	 		if ($json != null) {
+	 			$code = (isset($form->code)) ? $form->code : null;
+	 			$initialDate = (isset($form->initialDate)) ? $form->initialDate : null;
+	 			$finalDate = (isset($form->finalDate)) ? $form->finalDate : null;
+	 			$year = (isset($form->year)) ? $form->year : null;
+				if ($code != null) {
+	 				$Cohort =  $em->getRepository(Cohort::class)->findOneById($form->id);
+					$Cohort->setActive(1);
+					$dateini = new \Datetime($initialDate);
+					$Cohort->setInitialDate($dateini);
+					$datefin = new \Datetime($finalDate);
+					$Cohort->setFinalDate($datefin);
+					$Cohort->setYear($year);
+					$Cohort->setCode($code);
+	 				$Cohort->setUpdateTime($updateAt);
+					$em->persist($Cohort);
+					$em->flush();
+					$helpers->binnacleAction('Cohort','actualización',$updateAt,'Modificando datos en cohortes.',$identity->id);
+	 				$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => 'Registro actualizado.'
+		 			);
+				}
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/delete/cohort", name="configuration_delete_cohort", methods={"POST"})
+	 */
+	public function CohortDelete(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+			$identity = $jwtauth->checkToken($token, true);
+			$Cohort =  $em->getRepository(Cohort::class)->findOneById($form->id);
+			$helpers->binnacleAction('Cohort','elimino',$createdAt,'Se elimino cohorte ',$identity->id);	
+			$em->remove($Cohort);
+			$em->flush();
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => 'Registro eliminado.',
+			);
+			
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
 }
 
 

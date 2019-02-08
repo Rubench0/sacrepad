@@ -122,7 +122,7 @@ class SecurityController extends AbstractController
 				$data[] = [
 					'id' => $binnacles[$key]->getId(),
 					'date' => $binnacles[$key]->getDate(),
-					'network' => $binnacles[$key]->getNetworkLocation(),
+					'so' => $binnacles[$key]->getSystem(),
 					'device' => $binnacles[$key]->getDevice(),
 					'adress' => $binnacles[$key]->getAdreess(),
 					'user' => $binnacles[$key]->getUser()->getLogin(),
