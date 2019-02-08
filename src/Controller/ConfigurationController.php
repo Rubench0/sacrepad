@@ -780,15 +780,21 @@ class ConfigurationController extends AbstractController {
 	 			$initialDate = (isset($form->initialDate)) ? $form->initialDate : null;
 	 			$finalDate = (isset($form->finalDate)) ? $form->finalDate : null;
 	 			$year = (isset($form->year)) ? $form->year : null;
+	 			$active = (isset($form->active)) ? $form->active : null;
 				if ($code != null) {
 	 				$Cohort =  $em->getRepository(Cohort::class)->findOneById($form->id);
-					$Cohort->setActive(1);
+	 				if ($active == 'true') {
+	 					$active_re = 1;
+	 				} else {
+	 					$active_re = 0;
+	 				}
+					//$Cohort->setCode($code);
+					$Cohort->setActive($active_re);
 					$dateini = new \Datetime($initialDate);
 					$Cohort->setInitialDate($dateini);
 					$datefin = new \Datetime($finalDate);
 					$Cohort->setFinalDate($datefin);
 					$Cohort->setYear($year);
-					$Cohort->setCode($code);
 	 				$Cohort->setUpdateTime($updateAt);
 					$em->persist($Cohort);
 					$em->flush();
