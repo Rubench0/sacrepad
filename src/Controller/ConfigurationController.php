@@ -13,6 +13,7 @@ use App\Entity\NClassificationSubject;
 use App\Entity\NTypesSubject;
 use App\Entity\NRequirementsStudent;
 use App\Entity\Cohort;
+use App\Entity\Classroom;
 use App\Entity\User;
 
 
@@ -832,6 +833,230 @@ class ConfigurationController extends AbstractController {
 			$Cohort =  $em->getRepository(Cohort::class)->findOneById($form->id);
 			$helpers->binnacleAction('Cohort','elimino',$createdAt,'Se elimino cohorte ',$identity->id);	
 			$em->remove($Cohort);
+			$em->flush();
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => 'Registro eliminado.',
+			);
+			
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/classroom/new", name="configuration_classroom_new", methods={"POST"})
+	 */
+	public function ClassRoomRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+	 			$edifice = (isset($form->edifice)) ? $form->edifice : null;
+	 			$floor = (isset($form->floor)) ? $form->floor : null;
+	 			$name = (isset($form->name)) ? $form->name : null;
+
+				if ($edifice != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(Classroom::class)->findBy(array('name' => $name));
+					if (count($isset_data) == 0) {
+						$Classroom = new Classroom();
+						$Classroom->setEdifice($edifice);
+						$Classroom->setFloor($floor);
+						$Classroom->setName($name);
+						$Classroom->setCreateTime($createdAt);
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$Classroom->setUser($user);
+						$em->persist($Classroom);
+		    			$em->flush();
+		    			$helpers->binnacleAction('Classroom','registro',$createdAt,'Registrando aula '.$name.'.',$identity->id);
+						$response = array(
+							'status' => 'success',
+							'code' => 200,
+							'msg' => 'Registro creado exitosamente.',
+			 			);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'code' => 400,
+							'msg' => 'El registro ya se encuentra en base de datos.',
+	 					);
+					}
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/classroom", name="configuration_view_classroom", methods={"POST"})
+	 */
+	public function ClassRoomView(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$Classroom =  $em->getRepository(Classroom::class)->findAll();
+			foreach ($Classroom as $key => $value) {
+				$data[] = [
+					'id' => $Classroom[$key]->getId(),
+					'edifice' => $Classroom[$key]->getEdifice(),
+					'floor' => $Classroom[$key]->getFloor(),
+					'name' => $Classroom[$key]->getName(),
+				];
+			}
+			$helpers->binnacleAction('Classroom','consulta',$createdAt,'Consultando lista de aulas.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/edit/classroom", name="configuration_edit_classroom", methods={"POST"})
+	 */
+	public function ClassRoomEdit(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+			
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'Error al actualizar, dato vacio.',
+	 		);
+
+ 			$updateAt = new \Datetime('now');
+	 		if ($json != null) {
+				$edifice = (isset($form->edifice)) ? $form->edifice : null;
+	 			$floor = (isset($form->floor)) ? $form->floor : null;
+	 			$name = (isset($form->name)) ? $form->name : null;
+				if ($name != null) {
+	 				$Classroom =  $em->getRepository(Classroom::class)->findOneById($form->id);
+					$Classroom->setEdifice($edifice);
+					$Classroom->setFloor($floor);
+					$Classroom->setName($name);
+	 				$Classroom->setUpdateTime($updateAt);
+					$em->persist($Classroom);
+					$em->flush();
+					$helpers->binnacleAction('Classroom','actualización',$updateAt,'Modificando datos en aulas.',$identity->id);
+	 				$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => 'Registro actualizado.'
+		 			);
+				}
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/classroom/get", name="configuration_classroom_get", methods={"POST"})
+	 */
+	public function ClassRoomGet(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_data = $request->request->get('id');
+			$identity = $jwtauth->checkToken($token, true);
+			$Classroom =  $em->getRepository(Classroom::class)->findOneById($id_data);
+			$data = [
+				'id' => $Classroom->getId(),
+				'edifice' => $Classroom->getEdifice(),
+				'floor' => $Classroom->getFloor(),
+				'name' => $Classroom->getName(),
+			];
+			$helpers->binnacleAction('Classroom','consulta',$createdAt,'Consultando lista de aulas',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/configuration/delete/classroom", name="configuration_delete_classroom", methods={"POST"})
+	 */
+	public function ClassRoomDelete(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+			$identity = $jwtauth->checkToken($token, true);
+			$ClassRoom =  $em->getRepository(ClassRoom::class)->findOneById($form->id);
+			$helpers->binnacleAction('ClassRoom','elimino',$createdAt,'Se elimino aula ',$identity->id);	
+			$em->remove($ClassRoom);
 			$em->flush();
 			$response = array(
 				'status' => 'success',
