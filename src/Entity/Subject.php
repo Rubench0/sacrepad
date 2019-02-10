@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Subject
  *
- * @ORM\Table(name="subject", indexes={@ORM\Index(name="fk_subject_n_types_subject1_idx", columns={"n_types_subject_id"}), @ORM\Index(name="fk_subject_n_classification_subject1_idx", columns={"n_classification_subject_id"}), @ORM\Index(name="fk_subject_cohort1_idx", columns={"cohort_id"})})
+ * @ORM\Table(name="subject", indexes={@ORM\Index(name="fk_subject_n_types_subject1_idx", columns={"n_types_subject_id"}), @ORM\Index(name="fk_subject_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_subject_n_classification_subject1_idx", columns={"n_classification_subject_id"}), @ORM\Index(name="fk_subject_cohort1_idx", columns={"cohort_id"})})
  * @ORM\Entity
  */
 class Subject
@@ -31,7 +31,7 @@ class Subject
     /**
      * @var string|null
      *
-     * @ORM\Column(name="description", type="string", length=45, nullable=true)
+     * @ORM\Column(name="description", type="string", length=1000, nullable=true)
      */
     private $description;
 
@@ -78,6 +78,16 @@ class Subject
      * })
      */
     private $nTypesSubject;
+
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -164,6 +174,18 @@ class Subject
     public function setNTypesSubject(?NTypesSubject $nTypesSubject): self
     {
         $this->nTypesSubject = $nTypesSubject;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
