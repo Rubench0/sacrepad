@@ -16,6 +16,9 @@ use App\Entity\NClassificationSubject;
 use App\Entity\NTypesSubject;
 use App\Entity\Subject;
 use App\Entity\Cohort;
+use App\Entity\Classroom;
+use App\Entity\Lection;
+use App\Entity\NDays;
 
 
 class StudyControlController extends AbstractController {
@@ -144,6 +147,42 @@ class StudyControlController extends AbstractController {
 						];
 					}
 				break;
+				case 'subjects':
+					$records =  $em->getRepository(Subject::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getName(),
+						];
+					}
+				break;
+				case 'classrooms':
+					$records =  $em->getRepository(Classroom::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getName(),
+						];
+					}
+				break;
+				case 'facilitators':
+					$records =  $em->getRepository(Facilitator::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getName().' '.$records[$key]->getSurname(),
+						];
+					}
+				break;
+				case 'days':
+					$records =  $em->getRepository(NDays::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getDay(),
+						];
+					}
+				break;
 			}
 
 			$response = array(
@@ -235,9 +274,9 @@ class StudyControlController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/studycontrol/subjects", name="studycontrol_view_subject", methods={"POST"})
+	 * @Route("/studycontrol/data/tables", name="studycontrol_view_subject", methods={"POST"})
 	 */
-	public function subjectsAll(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+	public function ViewDataAll(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
 
 		$token = $request->request->get('authorization', null);
 		$auth_check = $jwtauth->checkToken($token);
@@ -247,16 +286,34 @@ class StudyControlController extends AbstractController {
 			$data = array();
 			$em = $this->getDoctrine()->getManager();
 			$identity = $jwtauth->checkToken($token, true);
-			$subject =  $em->getRepository(Subject::class)->findAll();
-			foreach ($subject as $key => $value) {
-				$data[] = [
-					'id' => $subject[$key]->getId(),
-					'name' => $subject[$key]->getName(),
-					'classification' => $subject[$key]->getNClassificationSubject()->getName(),
-					'cohort' => $subject[$key]->getCohort()->getCode(),
-				];
+			$table = $request->request->get('table');
+			switch ($table) {
+				case 'Subject':
+					$subject =  $em->getRepository(Subject::class)->findAll();
+					foreach ($subject as $key => $value) {
+						$data[] = [
+							'id' => $subject[$key]->getId(),
+							'name' => $subject[$key]->getName(),
+							'classification' => $subject[$key]->getNClassificationSubject()->getName(),
+							'cohort' => $subject[$key]->getCohort()->getCode(),
+						];
+					}
+					$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando lista de asignaturas.',$identity->id);
+				break;
+				case 'Lection':
+					$lection =  $em->getRepository(Lection::class)->findAll();
+					foreach ($lection as $key => $value) {
+						$data[] = [
+							'id' => $lection[$key]->getId(),
+							'code' => $lection[$key]->getCode(),
+							'subject' => $lection[$key]->getSubject()->getName(),
+							'classroom' => $lection[$key]->getClassroom()->getName(),
+							'facilitator' => $lection[$key]->getFacilitator()->getName().' '.$lection[$key]->getFacilitator()->getSurname(),
+						];
+					}
+					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando lista de clases.',$identity->id);
+				break;
 			}
-			$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando lista de asignaturas.',$identity->id);
 			$response = array(
 				'status' => 'success',
 				'code' => 200,
@@ -346,7 +403,7 @@ class StudyControlController extends AbstractController {
 			 					$classification_id = (isset($form->classification)) ? $form->classification : null;
 			 					$type_id = (isset($form->type)) ? $form->type : null;
 			 					$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
-			 					
+
 								$Subject =  $em->getRepository(Subject::class)->findOneById($form->id);
 								$Subject->setName($name);
 								$Subject->setDescription($description);
@@ -415,6 +472,76 @@ class StudyControlController extends AbstractController {
 			);
 		}
 
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/lection/new", name="studycontrol_lection_new", methods={"POST"})
+	 */
+	public function LectionRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+	 			$code = (isset($form->code)) ? $form->code : null;
+	 			$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
+	 			$subject_id = (isset($form->subject)) ? $form->subject : null;
+	 			$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
+
+				if ($code != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(Lection::class)->findBy(array('code' => $code));
+					if (count($isset_data) == 0) {
+						$Lection = new Lection();
+						$Lection->setCode($code);
+						$clasroom = $em->getRepository(Classroom::class)->findOneById($classroom_id);
+						$Lection->setClassroom($clasroom);
+						$facilitator = $em->getRepository(Facilitator::class)->findOneById($facilitator_id);
+						$Lection->setFacilitator($facilitator);
+						$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
+						$Lection->setSubject($subject);
+						$Lection->setCreateTime($createdAt);
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$Lection->setUser($user);
+						$em->persist($Lection);
+		    			$em->flush();
+		    			$helpers->binnacleAction('Lection','registro',$createdAt,'Registrando clase '.$code.'.',$identity->id);
+						$response = array(
+							'status' => 'success',
+							'code' => 200,
+							'msg' => 'Registro creado exitosamente.',
+			 			);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'code' => 400,
+							'msg' => 'El registro ya se encuentra en base de datos.',
+	 					);
+					}
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
 		return $helpers->json($response);
 	}
 			
