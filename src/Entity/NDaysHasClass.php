@@ -15,6 +15,13 @@ class NDaysHasClass
     /**
      * @var string|null
      *
+     * @ORM\Column(name="class_time", type="string", length=45, nullable=true)
+     */
+    private $classTime;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="hours", type="string", length=45, nullable=true)
      */
     private $hours;
@@ -66,6 +73,18 @@ class NDaysHasClass
      * })
      */
     private $user;
+
+    public function getClassTime(): ?string
+    {
+        return $this->classTime;
+    }
+
+    public function setClassTime(?string $classTime): self
+    {
+        $this->classTime = $classTime;
+
+        return $this;
+    }
 
     public function getHours(): ?string
     {

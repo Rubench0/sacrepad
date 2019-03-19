@@ -19,6 +19,7 @@ use App\Entity\Cohort;
 use App\Entity\Classroom;
 use App\Entity\Lection;
 use App\Entity\NDays;
+use App\Entity\NDaysHasClass;
 
 
 class StudyControlController extends AbstractController {
@@ -355,6 +356,27 @@ class StudyControlController extends AbstractController {
 						'cohort' => $Subject->getCohort()->getId(),
 					];
 					$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
+				break;
+				case 'Lection':
+					$Lection =  $em->getRepository(Lection::class)->findOneById($id_data);
+					$schedule =  $em->getRepository(NDaysHasClass::class)->findBy(array('class'=>$id_data));
+					$days = array();
+					foreach ($schedule as $key => $value) {
+						$days[] = [
+							'day' => $schedule[$key]->getNDays()->getDay(),
+							'classtime' => $schedule[$key]->getClassTime(),
+							'hours' => $schedule[$key]->getHours(),
+						];
+					}
+					$data = [
+						'id' => $Lection->getId(),
+						'code' => $Lection->getCode(),
+						'description' => $Lection->getClassroom(),
+						'facilitator' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname(),
+						'subject' => $Lection->getSubject()->getName(),
+						'days' => $days,
+					];
+					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
 				break;
 			}
 			$response = array(
