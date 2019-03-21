@@ -371,9 +371,9 @@ class StudyControlController extends AbstractController {
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
-						'description' => $Lection->getClassroom(),
-						'facilitator' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname(),
-						'subject' => $Lection->getSubject()->getName(),
+						'subject' => $Lection->getSubject()->getId(),
+						'classroom' => $Lection->getClassroom()->getId(),
+						'facilitator' => $Lection->getFacilitator()->getId(),
 						'days' => $days,
 					];
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
