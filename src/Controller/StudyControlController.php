@@ -418,7 +418,7 @@ class StudyControlController extends AbstractController {
  			$updateAt = new \Datetime('now');
 	 		if ($json != null) {
 				$name = (isset($form->name)) ? $form->name : null;
-					if ($name != null) {
+					if ($form->id != null) {
 						switch ($table_find) {
 							case 'Subject':
 			 					$description = (isset($form->description)) ? $form->description : null;
@@ -439,6 +439,25 @@ class StudyControlController extends AbstractController {
 								$em->persist($Subject);
 								$em->flush();
 								$helpers->binnacleAction('Subject','actualización',$updateAt,'Modificando datos de asignatura.',$identity->id);
+							break;
+							case 'Lection':
+								$code = (isset($form->code)) ? $form->code : null;
+			 					$subject_id = (isset($form->subject)) ? $form->subject : null;
+			 					$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
+			 					$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
+
+								$Lection =  $em->getRepository(Lection::class)->findOneById($form->id);
+								$Lection->setCode($code);
+								$classroom = $em->getRepository(Classroom::class)->findOneById($classroom_id);
+								$Lection->setClassroom($classroom);
+								$facilitator = $em->getRepository(Facilitator::class)->findOneById($facilitator_id);
+								$Lection->setFacilitator($facilitator);
+								$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
+								$Lection->setSubject($subject);
+								$Lection->setUpdateTime($updateAt);
+								$em->persist($Lection);
+								$em->flush();
+								$helpers->binnacleAction('Lection','actualización',$updateAt,'Modificando datos de clase. id='.$form->id.'',$identity->id);
 							break;
 						}
 	 				$response = array(
@@ -564,6 +583,113 @@ class StudyControlController extends AbstractController {
 				'msg' => 'No tiene acceso.',
 			);
 		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/hasclass/new", name="studycontrol_hasclass_new", methods={"POST"})
+	 */
+	public function hasclassRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+	 			$id_day = (isset($form->id_day)) ? $form->id_day : null;
+	 			$id_class = (isset($form->id_class)) ? $form->id_class : null;
+	 			$class_time = (isset($form->class_time)) ? $form->class_time : null;
+
+				if ($id_class != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(NDaysHasClass::class)->findBy(array('class' => $id_class,'nDays' => $id_day));
+					if (count($isset_data) == 0) {
+						$lection = $em->getRepository(Lection::class)->findOneById($id_class);
+						$day = $em->getRepository(NDays::class)->findOneById($id_day);
+						$NDaysHasClass = new NDaysHasClass();
+						$NDaysHasClass->setNDays($day);
+						$NDaysHasClass->setClass($lection);
+						$NDaysHasClass->setClassTime($class_time);
+						$NDaysHasClass->setCreateTime($createdAt);
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$NDaysHasClass->setUser($user);
+						$em->persist($NDaysHasClass);
+		    			$em->flush();
+		    			$helpers->binnacleAction('NDaysHasClass','registro',$createdAt,'Registrando horario de la clase id='.$id_class.'.',$identity->id);
+						$response = array(
+							'status' => 'success',
+							'code' => 200,
+							'msg' => 'Horario agregado exitosamente.',
+			 			);
+					} else {
+						$response = array(
+							'status' => 'error',
+							'code' => 400,
+							'msg' => 'El dia ya tiene horario',
+	 					);
+					}
+				}
+	 		
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/data/daysclass", name="studycontrol_view_daysclass", methods={"POST"})
+	 */
+	public function ViewDaysClassDataAll(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$id = $request->request->get('id');
+			$dayshasclass =  $em->getRepository(NDaysHasClass::class)->findBy(array('class' => $id));
+			foreach ($dayshasclass as $key => $value) {
+				$data[] = [
+					'id' => $dayshasclass[$key]->getClass()->getId(),
+					'day' => $dayshasclass[$key]->getNDays()->getDay(),
+					'hours' => $dayshasclass[$key]->getHours(),
+					'classtime' => $dayshasclass[$key]->getClassTime(),
+				];
+			}
+			$helpers->binnacleAction('DaysClass','consulta',$createdAt,'Consultando lista de dias de clase.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
 		return $helpers->json($response);
 	}
 			
