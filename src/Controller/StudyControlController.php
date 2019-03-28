@@ -496,6 +496,15 @@ class StudyControlController extends AbstractController {
 					$Datas =  $em->getRepository(Subject::class)->findOneById($form->id);
 					$helpers->binnacleAction('Subject','elimino',$createdAt,'Se elimino la asignatura. ',$identity->id);	
 				break;
+				case 'Lection':
+					$dayshas = $em->getRepository(NDaysHasClass::class)->findBy(array('class' => $form->id));
+					foreach ($dayshas as $key => $value) {
+						$em->remove($dayshas[$key]);
+						$em->flush();
+					}
+					$Datas =  $em->getRepository(Lection::class)->findOneById($form->id);
+					$helpers->binnacleAction('Lection','elimino',$createdAt,'Se elimino la clase. ',$identity->id);	
+				break;
 			}
 			$em->remove($Datas);
 			$em->flush();
