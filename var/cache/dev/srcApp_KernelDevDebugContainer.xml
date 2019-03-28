@@ -1911,14 +1911,6 @@
         <argument>2048</argument>
       </call>
       <call method="addListener">
-        <argument>console.command</argument>
-        <argument type="collection">
-          <argument type="service" id="debug.debug_handlers_listener"/>
-          <argument>configure</argument>
-        </argument>
-        <argument>2048</argument>
-      </call>
-      <call method="addListener">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument type="service" id="router_listener"/>
@@ -4077,7 +4069,7 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.l4Gkqqx" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.HJ617H." class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\ConfigurationController::ClassRoomDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4108,6 +4100,7 @@
         <argument key="App\Controller\StudyControlController::DataDelete" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::DataEdit" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::DataGet" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController::DeleteScheduleClass" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::LectionRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::SubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::ViewDataAll" type="service" id=".service_locator.1ioWPMn"/>
@@ -4151,6 +4144,7 @@
         <argument key="App\Controller\StudyControlController:DataDelete" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:DataEdit" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:DataGet" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController:DeleteScheduleClass" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:LectionRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:SubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:ViewDataAll" type="service" id=".service_locator.1ioWPMn"/>
@@ -5035,7 +5029,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.l4Gkqqx"/>
+      <argument type="service" id=".service_locator.HJ617H."/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5374,7 +5368,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.l4Gkqqx"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.HJ617H."/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>

@@ -679,7 +679,7 @@ class StudyControlController extends AbstractController {
 			$dayshasclass =  $em->getRepository(NDaysHasClass::class)->findBy(array('class' => $id));
 			foreach ($dayshasclass as $key => $value) {
 				$data[] = [
-					'id' => $dayshasclass[$key]->getClass()->getId(),
+					'id' => $dayshasclass[$key]->getNDays()->getId(),
 					'day' => $dayshasclass[$key]->getNDays()->getDay(),
 					'hours' => $dayshasclass[$key]->getHours(),
 					'classtime' => $dayshasclass[$key]->getClassTime(),
@@ -691,6 +691,40 @@ class StudyControlController extends AbstractController {
 				'code' => 200,
 				'data' => $data,
 			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/delete/schedule", name="studycontrol_delete_schedule_class", methods={"POST"})
+	 */
+	public function DeleteScheduleClass(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_day = $request->request->get('id_day');
+			$id_class = $request->request->get('id_class');
+			$identity = $jwtauth->checkToken($token, true);
+			$schedule =  $em->getRepository(NDaysHasClass::class)->findOneBy(array('class' => $id_class,'nDays' => $id_day));
+			$helpers->binnacleAction('NDaysHasClass','elimino',$createdAt,'Se elimino horario de la clase id='.$id_class.'. ',$identity->id);	
+			$em->remove($schedule);
+			$em->flush();
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => 'Horario eliminado.',
+			);
+			
 		} else {
 			$response = array(
 				'status' => 'error',
