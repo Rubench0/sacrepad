@@ -20,6 +20,7 @@ use App\Entity\Classroom;
 use App\Entity\Lection;
 use App\Entity\NDays;
 use App\Entity\NDaysHasClass;
+use App\Entity\Inscription;
 
 
 class StudyControlController extends AbstractController {
@@ -304,11 +305,14 @@ class StudyControlController extends AbstractController {
 				case 'Lection':
 					$lection =  $em->getRepository(Lection::class)->findAll();
 					foreach ($lection as $key => $value) {
+						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId()));
 						$data[] = [
 							'id' => $lection[$key]->getId(),
 							'code' => $lection[$key]->getCode(),
 							'subject' => $lection[$key]->getSubject()->getName(),
 							'classroom' => $lection[$key]->getClassroom()->getName(),
+							'limit' => $lection[$key]->getLimix(),
+							'inscriptions' => count($inscriptions),
 							'facilitator' => $lection[$key]->getFacilitator()->getName().' '.$lection[$key]->getFacilitator()->getSurname(),
 						];
 					}
@@ -374,6 +378,7 @@ class StudyControlController extends AbstractController {
 						'subject' => $Lection->getSubject()->getId(),
 						'classroom' => $Lection->getClassroom()->getId(),
 						'facilitator' => $Lection->getFacilitator()->getId(),
+						'limit' => $Lection->getLimix(),
 						'days' => $days,
 					];
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
@@ -445,6 +450,7 @@ class StudyControlController extends AbstractController {
 			 					$subject_id = (isset($form->subject)) ? $form->subject : null;
 			 					$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
 			 					$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
+								$limit = (isset($form->limit)) ? $form->limit : null;
 
 								$Lection =  $em->getRepository(Lection::class)->findOneById($form->id);
 								$Lection->setCode($code);
@@ -454,6 +460,7 @@ class StudyControlController extends AbstractController {
 								$Lection->setFacilitator($facilitator);
 								$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
 								$Lection->setSubject($subject);
+								$Lection->setLimix($limit);
 								$Lection->setUpdateTime($updateAt);
 								$em->persist($Lection);
 								$em->flush();
@@ -551,6 +558,7 @@ class StudyControlController extends AbstractController {
 	 			$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
 	 			$subject_id = (isset($form->subject)) ? $form->subject : null;
 	 			$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
+	 			$limit = (isset($form->limit)) ? $form->limit : null;
 
 				if ($code != null) {
 					$em = $this->getDoctrine()->getManager();
@@ -564,6 +572,7 @@ class StudyControlController extends AbstractController {
 						$Lection->setFacilitator($facilitator);
 						$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
 						$Lection->setSubject($subject);
+						$Lection->setLimix($limit);
 						$Lection->setCreateTime($createdAt);
 						$user = $em->getRepository(User::class)->findOneById($identity->id);
 						$Lection->setUser($user);
@@ -725,6 +734,45 @@ class StudyControlController extends AbstractController {
 				'msg' => 'Horario eliminado.',
 			);
 			
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/data/inscription_students", name="studycontrol_view_inscription_students", methods={"POST"})
+	 */
+	public function ViewInscriptionStudentsDataAll(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$id = $request->request->get('id');
+			$students =  $em->getRepository(Inscription::class)->findBy(array('class' => $id));
+				foreach ($students as $key => $value) {
+					$data[] = [
+						'id' => $students[$key]->getStudent()->getId(),
+						'name' => $students[$key]->getStudent()->getName().' '.$students[$key]->getStudent()->getSurname(),
+						'identification' => $students[$key]->getStudent()->getIdentification(),
+					];
+				}
+			$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando lista de alumnos inscritos.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
 		} else {
 			$response = array(
 				'status' => 'error',

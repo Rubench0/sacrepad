@@ -31,7 +31,7 @@ class BinnacleAccessUser
     /**
      * @var string|null
      *
-     * @ORM\Column(name="system", type="string", length=3000, nullable=true)
+     * @ORM\Column(name="system", type="string", length=45, nullable=true)
      */
     private $system;
 

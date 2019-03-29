@@ -57,6 +57,7 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         'studycontrol_hasclass_new' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::hasclassRegistry'), array(), array(array('text', '/studycontrol/hasclass/new')), array(), array()),
         'studycontrol_view_daysclass' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::ViewDaysClassDataAll'), array(), array(array('text', '/studycontrol/data/daysclass')), array(), array()),
         'studycontrol_delete_schedule_class' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::DeleteScheduleClass'), array(), array(array('text', '/studycontrol/delete/schedule')), array(), array()),
+        'studycontrol_view_inscription_students' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::ViewInscriptionStudentsDataAll'), array(), array(array('text', '/studycontrol/data/inscription_students')), array(), array()),
         'user_new' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserRegistry'), array(), array(array('text', '/user/new')), array(), array()),
         'user_profile_edit' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserProfileUpdate'), array(), array(array('text', '/user/profile/edit')), array(), array()),
         'user_all' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserAll'), array(), array(array('text', '/user/all')), array(), array()),
