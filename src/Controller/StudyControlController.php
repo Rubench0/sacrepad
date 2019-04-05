@@ -21,6 +21,7 @@ use App\Entity\Lection;
 use App\Entity\NDays;
 use App\Entity\NDaysHasClass;
 use App\Entity\Inscription;
+use App\Entity\NRequirementsStudent;
 
 
 class StudyControlController extends AbstractController {
@@ -182,6 +183,15 @@ class StudyControlController extends AbstractController {
 						$data[] = [
 							'value' => $records[$key]->getId(),
 							'text' => $records[$key]->getDay(),
+						];
+					}
+				break;
+				case 'requirements':
+					$records =  $em->getRepository(NRequirementsStudent::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getName(),
 						];
 					}
 				break;
@@ -372,6 +382,7 @@ class StudyControlController extends AbstractController {
 							'hours' => $schedule[$key]->getHours(),
 						];
 					}
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$Lection->getId()));
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
@@ -379,9 +390,10 @@ class StudyControlController extends AbstractController {
 						'classroom' => $Lection->getClassroom()->getId(),
 						'facilitator' => $Lection->getFacilitator()->getId(),
 						'limit' => $Lection->getLimix(),
+						'inscriptions' => count($inscriptions),
 						'days' => $days,
 					];
-					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
+					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de clase',$identity->id);
 				break;
 			}
 			$response = array(
@@ -765,6 +777,7 @@ class StudyControlController extends AbstractController {
 						'id' => $students[$key]->getStudent()->getId(),
 						'name' => $students[$key]->getStudent()->getName().' '.$students[$key]->getStudent()->getSurname(),
 						'identification' => $students[$key]->getStudent()->getIdentification(),
+						'aproved' => $students[$key]->getAproved(),
 					];
 				}
 			$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando lista de alumnos inscritos.',$identity->id);
@@ -882,6 +895,83 @@ class StudyControlController extends AbstractController {
 				'msg' => 'No tiene acceso.',
 			);
 		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/unsubscribe/student", name="studycontrol_unsubscribe_student", methods={"POST"})
+	 */
+	public function UnsubscribeStudent(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_student = $request->request->get('id_student');
+			$id_class = $request->request->get('id_class');
+			$identity = $jwtauth->checkToken($token, true);
+			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('class' => $id_class,'student' => $id_student));
+			$helpers->binnacleAction('Inscription','elimino',$createdAt,'Se retiro el estudiante id='.$id_student.' de la clase id='.$id_class.'. ',$identity->id);
+			$em->remove($inscription);
+			$em->flush();
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => 'Estudiante retirado.',
+			);
+			
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/aproved/inscription", name="studycontrol_aproved_inscription", methods={"POST"})
+	 */
+	public function AprovedInscription(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_student = $request->request->get('id_student');
+			$id_class = $request->request->get('id_class');
+			$identity = $jwtauth->checkToken($token, true);
+			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('class' => $id_class,'student' => $id_student));
+			$aproved = $inscription->getAproved();
+			if ($aproved != 'false') {
+				$inscription->setAproved(1);
+				$msg = 'Estudiante aprobado';
+			} else {
+				$inscription->setAproved(0);
+				$msg = 'Estudiante desaprobado';
+			}
+			
+			$helpers->binnacleAction('Inscription','aprobar',$createdAt,'Aproada inscripcion del estudiante id='.$id_student.' de la clase id='.$id_class.'. ',$identity->id);
+			$em->persist($inscription);
+			$em->flush();
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => $msg,
+			);
+			
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
 		return $helpers->json($response);
 	}
 			

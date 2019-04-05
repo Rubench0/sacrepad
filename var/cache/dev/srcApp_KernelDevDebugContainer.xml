@@ -4069,7 +4069,7 @@
         <argument key="validator" type="service" id="debug.validator"/>
       </argument>
     </service>
-    <service id=".service_locator.Vqm9eWT" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
+    <service id=".service_locator.vql0Tim" class="Symfony\Component\DependencyInjection\ServiceLocator" public="false">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\ConfigurationController::ClassRoomDelete" type="service" id=".service_locator.1ioWPMn"/>
@@ -4097,6 +4097,7 @@
         <argument key="App\Controller\SecurityController::binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController::login" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController::AprovedInscription" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::DataDelete" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::DataEdit" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::DataGet" type="service" id=".service_locator.1ioWPMn"/>
@@ -4104,6 +4105,7 @@
         <argument key="App\Controller\StudyControlController::LectionRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::SearchStudentInscription" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::SubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController::UnsubscribeStudent" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::ViewDataAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::ViewDaysClassDataAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController::ViewInscriptionStudentsDataAll" type="service" id=".service_locator.1ioWPMn"/>
@@ -4144,6 +4146,7 @@
         <argument key="App\Controller\SecurityController:binnacleAccess" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:binnacleActions" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\SecurityController:login" type="service" id=".service_locator.nx_RgZP"/>
+        <argument key="App\Controller\StudyControlController:AprovedInscription" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:DataDelete" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:DataEdit" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:DataGet" type="service" id=".service_locator.1ioWPMn"/>
@@ -4151,6 +4154,7 @@
         <argument key="App\Controller\StudyControlController:LectionRegistry" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:SearchStudentInscription" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:SubjectRegistry" type="service" id=".service_locator.1ioWPMn"/>
+        <argument key="App\Controller\StudyControlController:UnsubscribeStudent" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:ViewDataAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:ViewDaysClassDataAll" type="service" id=".service_locator.1ioWPMn"/>
         <argument key="App\Controller\StudyControlController:ViewInscriptionStudentsDataAll" type="service" id=".service_locator.1ioWPMn"/>
@@ -5035,7 +5039,7 @@
       <argument type="service" id="security.token_storage"/>
     </service>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" public="false">
-      <argument type="service" id=".service_locator.Vqm9eWT"/>
+      <argument type="service" id=".service_locator.vql0Tim"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" public="false"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver" public="false"/>
@@ -5374,7 +5378,7 @@
     <service id="Knp\Component\Pager\PaginatorInterface" alias="knp_paginator"/>
     <service id="Psr\Container\ContainerInterface" alias="service_container" public="false"/>
     <service id="Symfony\Component\DependencyInjection\ContainerInterface" alias="service_container" public="false"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.Vqm9eWT"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.vql0Tim"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem" public="false"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="validator" alias="debug.validator" public="true"/>
