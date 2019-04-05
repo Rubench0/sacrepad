@@ -783,6 +783,107 @@ class StudyControlController extends AbstractController {
 
 		return $helpers->json($response);
 	}
+
+	/**
+	 * @Route("/studycontrol/data/search_student", name="studycontrol_view_search_student", methods={"POST"})
+	 */
+	public function SearchStudentInscription(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$data = array();
+			$em = $this->getDoctrine()->getManager();
+			$identity = $jwtauth->checkToken($token, true);
+			$cedula = $request->request->get('cedula');
+			$students =  $em->getRepository(Student::class)->findOneBy(array('identification' => $cedula));
+			if ($students) {
+				$data = [
+					'id' => $students->getId(),
+					'name' => $students->getName().' '.$students->getSurname(),
+					'identification' => $students->getIdentification(),
+				];
+			} else {
+				$data = null;
+			}
+		
+			$helpers->binnacleAction('Student','consulta',$createdAt,'Buscando estudiante - Inscription.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/inscription/student", name="studycontrol_inscription_student", methods={"POST"})
+	 */
+	public function inscriptionStudent(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$id_student = $request->request->get('id_student');
+			$id_class = $request->request->get('id_class');
+
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($id_student != null) {
+	 			$createdAt = new \Datetime('now');
+	 			$identity = $jwtauth->checkToken($token, true);
+
+				$em = $this->getDoctrine()->getManager();
+				$isset_data = $em->getRepository(Inscription::class)->findBy(array('class' => $id_class,'student' => $id_student));
+				if (count($isset_data) == 0) {
+					$lection = $em->getRepository(Lection::class)->findOneById($id_class);
+					$student = $em->getRepository(Student::class)->findOneById($id_student);
+					$Inscription = new Inscription();
+					$Inscription->setClass($lection);
+					$Inscription->setStudent($student);
+					$Inscription->setCreateTime($createdAt);
+					$user = $em->getRepository(User::class)->findOneById($identity->id);
+					$Inscription->setUser($user);
+					$em->persist($Inscription);
+	    			$em->flush();
+	    			$helpers->binnacleAction('Inscription','registro',$createdAt,'Inscribiendo alumno id='.$id_student.' en la clase '.$id_class.'.',$identity->id);
+					$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => 'Estudiante inscrito exitosamente.',
+		 			);
+				} else {
+					$response = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'El estudiante esta inscrito en esta clase.',
+ 					);
+				}
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
 			
 }
 
