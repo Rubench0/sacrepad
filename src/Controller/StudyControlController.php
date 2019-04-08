@@ -315,7 +315,7 @@ class StudyControlController extends AbstractController {
 				case 'Lection':
 					$lection =  $em->getRepository(Lection::class)->findAll();
 					foreach ($lection as $key => $value) {
-						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId()));
+						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId(),'aproved' => true));
 						$data[] = [
 							'id' => $lection[$key]->getId(),
 							'code' => $lection[$key]->getCode(),
@@ -382,7 +382,7 @@ class StudyControlController extends AbstractController {
 							'hours' => $schedule[$key]->getHours(),
 						];
 					}
-					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$Lection->getId()));
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$Lection->getId(),'aproved' => true));
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
