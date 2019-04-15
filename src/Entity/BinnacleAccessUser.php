@@ -31,21 +31,21 @@ class BinnacleAccessUser
     /**
      * @var string|null
      *
-     * @ORM\Column(name="system", type="string", length=45, nullable=true)
+     * @ORM\Column(name="system", type="string", length=2000, nullable=true)
      */
     private $system;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="device", type="string", length=45, nullable=true)
+     * @ORM\Column(name="device", type="string", length=2000, nullable=true)
      */
     private $device;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="adreess", type="string", length=45, nullable=true)
+     * @ORM\Column(name="adreess", type="string", length=100, nullable=true)
      */
     private $adreess;
 

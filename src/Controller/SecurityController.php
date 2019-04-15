@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
 
 		$data = array(
 			'status' => 'error',
-			'data' => 'Send json via post!!'
+			'data' => 'Datos no recibidos!!'
 		);
 
 		$json = $request->request->get('json');
@@ -53,7 +53,7 @@ class SecurityController extends AbstractController
 			} else {
 				$data = array(
 					'status' => 'error',
-					'data' => 'Email incorrecto o contraseña'
+					'data' => 'Email o contraseña incorrecto'
 				);
 			}
 

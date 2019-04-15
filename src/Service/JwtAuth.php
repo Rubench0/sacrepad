@@ -101,7 +101,7 @@ class JwtAuth {
 		} else {
 			$data = array(
 				'status' => 'error',
-				'data' => 'No logueado'
+				'data' => 'Datos de acceso incorrecto'
 			);
 		}
 
