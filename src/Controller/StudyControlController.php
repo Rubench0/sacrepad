@@ -408,6 +408,19 @@ class StudyControlController extends AbstractController {
 					}
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando asignaturas del facilitador id='.$user->getId().'',$identity->id);
 				break;
+				case 'Lection-Student':
+					$user =  $em->getRepository(User::class)->findOneById($id_data);
+					$Inscription =  $em->getRepository(Inscription::class)->findBy(array('student'=>$user->getStudent()->getId()));
+					$data = array();
+					foreach ($Inscription as $key => $value) {
+						$data[] = [
+							'code' => $Inscription[$key]->getClass()->getCode(),
+							'subject' => $Inscription[$key]->getClass()->getSubject()->getName(),
+							'cohort' => $Inscription[$key]->getClass()->getSubject()->getCohort()->getCode(),
+						];
+					}
+					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando asignaturas del estudiante id='.$user->getId().'',$identity->id);
+				break;
 			}
 			$response = array(
 				'status' => 'success',
