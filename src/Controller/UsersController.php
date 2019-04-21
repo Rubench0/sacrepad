@@ -105,8 +105,8 @@ class UsersController extends AbstractController {
 							$em->persist($Student);
 				    		$em->flush();
 							$User->setStudent($Student);
-							$helpers->binnacleAction('Student','registro',$createdAt,'Agregando datos de usuario estudiante.',$identity->id);
-							$password = hash('sha256', $identification);
+							$helpers->binnacleAction('Student','registro',$createdAt,'Inscribiendo estudiante.',$identity->id);
+							$password = hash('sha256', $password);
 							$User->setPassword($password);
 							break;
 					}
@@ -143,6 +143,104 @@ class UsersController extends AbstractController {
 				'code' => 400,
 				'msg' => 'No tiene acceso.',
 			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/user/inscription/new", name="user_inscription_new", methods={"POST"})
+	 */
+	public function UserInscriptionRegistry(Request $request,Helpers $helpers,ValidatorInterface $validator, JwtAuth $jwtauth) {
+
+		$json = $request->request->get('form');
+		$form = json_decode($json);
+
+		$response = array(
+			'status' => 'error',
+			'code' => 400,
+			'msg' => 'Error al crear usuario, verifique el email.',
+		);
+
+		if ($form != null) {
+			$createdAt = new \Datetime('now');
+
+			$login = (isset($form->login)) ? $form->login : null;
+			$password = (isset($form->password)) ? $form->password : null;
+			$email = (isset($form->email)) ? $form->email : null;
+			$rol = 'ROLE_USER_S';
+			$type = (isset($form->type)) ? $form->type : null;
+			$name = (isset($form->name)) ? $form->name : null;
+			$name2 = (isset($form->name2)) ? $form->name2 : null;
+			$surname = (isset($form->surname)) ? $form->surname : null;
+			$surname2 = (isset($form->surname2)) ? $form->surname2 : null;
+			$phone = (isset($form->phone)) ? $form->phone : null;
+			$identification = (isset($form->identification)) ? $form->identification : null;
+			$profession = (isset($form->profession)) ? $form->profession : null;
+
+			$emailConstraint = new Assert\Email();
+			$emailConstraint->message = 'El email no es valido';
+			$validate_email = $validator->validate($email, $emailConstraint);
+
+			if ($email != null && count($validate_email) == 0) {
+
+				$em = $this->getDoctrine()->getManager();
+				$isset_identification = $em->getRepository(Student::class)->findBy(array('identification' => $identification));
+				$isset_email = $em->getRepository(User::class)->findBy(array('email' => $email));
+				$isset_login = $em->getRepository(User::class)->findBy(array('login' => $login));
+				
+				if (count($isset_identification) != 0) {
+					$response = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'Esta cédula ya se encuentra en la base de datos.',
+					);
+
+				} else if (count($isset_login) != 0) {
+					$response = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'El nombre de usuario ya se encuentra registrado.',
+					);
+				} else if (count($isset_email) != 0) {
+					$response = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'El correo ya se encuentra registrado.',
+					);
+				}  else {
+					
+					$User = new User();
+					$Student = new Student();
+					$Student->setIdentification($identification);
+					$Student->setName($name);
+					$Student->setName2($name2);
+					$Student->setSurname($surname);
+					$Student->setSurname2($surname2);
+					$Student->setPhone($phone);
+					$Student->setAdmitted(0);
+					$Student->setCreateTime($createdAt);
+					$em->persist($Student);
+					$em->flush();
+					$User->setStudent($Student);
+					$helpers->binnacleAction('Student','registro',$createdAt,'Inscribiendo estudiante.','');
+					$password = hash('sha256', $password);
+					$User->setPassword($password);
+					$User->setLogin($login);
+					$User->setEmail($email); 
+					$User->setIsActive(1);
+					$User->setRole($rol);
+					$User->setCreateTime($createdAt);
+					$em->persist($User);
+					$em->flush();
+					$helpers->binnacleAction('User','registro',$createdAt,'Agregando usuario.','');
+					$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => 'Estudiante inscrito existosamente, redirigiendo al login...',
+						'user' => $User
+					);
+	 			}
+			}
 		}
 		return $helpers->json($response);
 	}
