@@ -94,14 +94,23 @@ class JwtAuth {
 			$this->manager->flush();
 
 			if ($getHash == null) {
-				$data = $jwt;
+				$data = array(
+					'status' => 'success',
+					'code' => 200,
+					'data' => $jwt,
+				);
 			} else {
-				$data = $jwt_decode;
+				$data = array(
+					'status' => 'success',
+					'code' => 200,
+					'data' => $jwt_decode,
+				);
 			}
 		} else {
 			$data = array(
 				'status' => 'error',
-				'data' => 'Datos de acceso incorrecto'
+				'code' => 400,
+				'msg' => 'Datos de acceso incorrectos.'
 			);
 		}
 

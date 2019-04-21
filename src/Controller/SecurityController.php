@@ -22,7 +22,8 @@ class SecurityController extends AbstractController
 
 		$data = array(
 			'status' => 'error',
-			'data' => 'Datos no recibidos!!'
+			'code' => 400,
+			'msg' => 'Datos no recibidos'
 		);
 
 		$json = $request->request->get('json');
@@ -32,37 +33,16 @@ class SecurityController extends AbstractController
 			$email = (isset($params->email)) ? $params->email : null;
 			$password = (isset($params->password)) ? $params->password : null;
 			$getHash = (isset($params->getHash)) ? $params->getHash : null;
-
-			$emailConstraint = new Assert\Email();
-			$emailConstraint->message = 'El email no es valido';
-			$validate_email = $validator->validate($email, $emailConstraint);
 			$pwd = hash('sha256', $password);
-
-			if ($email != null && count($validate_email) == 0 && $password != null) {
-				if ($getHash == null || $getHash == false) {
-					$singup = $jwtauth->singup($email, $pwd);
-				} else {
-					$singup = $jwtauth->singup($email, $pwd, true);
-				}
-/*	   			$data = array(
-					'status' => 'success',
-					'data' => 'Email correcto',
-					'singup' => $singup
-				);		*/	
-				return $helpers->json($singup);
+			if ($getHash == null || $getHash == false) {
+				$singup = $jwtauth->singup($email, $pwd);
 			} else {
-				$data = array(
-					'status' => 'error',
-					'data' => 'Email o contraseña incorrecto'
-				);
+				$singup = $jwtauth->singup($email, $pwd, true);
 			}
+			return $helpers->json($singup);
 
 		}
-		return $helpers->json(array($data));
-
-		// return $this->render('main/index.html.twig', [
-		//     'controller_name' => $variable,
-		// ]);
+		return $helpers->json($data);
 	}
 
 	/**
