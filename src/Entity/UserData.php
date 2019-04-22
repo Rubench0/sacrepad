@@ -38,7 +38,7 @@ class UserData
     /**
      * @var string|null
      *
-     * @ORM\Column(name="phone", type="string", length=11, nullable=true)
+     * @ORM\Column(name="phone", type="string", length=12, nullable=true)
      */
     private $phone;
 

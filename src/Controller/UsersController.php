@@ -475,7 +475,7 @@ class UsersController extends AbstractController {
 					$response = array(
 						'status' => 'success',
 						'code' => 200,
-						'msg' => 'Contraseña actualizada exitosamente.',
+						'msg' => 'Contraseña actualizada exitosamente, ingrese sesión nuevamente.',
 		 			);
 				} else {
 					$response = array(

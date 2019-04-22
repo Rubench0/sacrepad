@@ -63,6 +63,7 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         'studycontrol_unsubscribe_student' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::UnsubscribeStudent'), array(), array(array('text', '/studycontrol/unsubscribe/student')), array(), array()),
         'studycontrol_aproved_inscription' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::AprovedInscription'), array(), array(array('text', '/studycontrol/aproved/inscription')), array(), array()),
         'user_new' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserRegistry'), array(), array(array('text', '/user/new')), array(), array()),
+        'user_inscription_new' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserInscriptionRegistry'), array(), array(array('text', '/user/inscription/new')), array(), array()),
         'user_profile_edit' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserProfileUpdate'), array(), array(array('text', '/user/profile/edit')), array(), array()),
         'user_all' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserAll'), array(), array(array('text', '/user/all')), array(), array()),
         'user_get' => array(array(), array('_controller' => 'App\\Controller\\UsersController::UserGet'), array(), array(array('text', '/user/get')), array(), array()),
