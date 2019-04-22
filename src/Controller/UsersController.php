@@ -124,7 +124,7 @@ class UsersController extends AbstractController {
 						$response = array(
 							'status' => 'success',
 							'code' => 200,
-							'msg' => 'Usuario creado.',
+							'msg' => 'Usuario registrado exitosamente.',
 							'user' => $User
 			 			);
 					} else {
