@@ -12,7 +12,7 @@ use App\Entity\BinnacleAccessUser;
 class JwtAuth {
 	public $manager;
 	public $key;
-	
+
 	public function __construct($manager) {
 		$this->manager = $manager;
 		$this->key = 'holak$$e3213123';
@@ -24,14 +24,14 @@ class JwtAuth {
 			'password'=>$password
 		));
 
-		if ($user->getIsActive() == true) {
-			$singup = false;
-			if (is_object($user)) {
-				$singup = true;
-			}
-
-			if ($singup == true) {
-
+		if (is_object($user)) {
+			if ($user->getIsActive() == false) {
+				$data = array(
+					'status' => 'error',
+					'code' => 400,
+					'msg' => 'Usuario inactivo.'
+				);
+			} else {
 				if ($user->getUserData() != null) {
 					$token = array(
 						'id' => $user->getId(),
@@ -76,7 +76,6 @@ class JwtAuth {
 					);
 				}
 
-
 				$jwt = JWT::encode($token, $this->key, 'HS256');
 				$jwt_decode = JWT::decode($jwt, $this->key, array('HS256'));
 
@@ -107,18 +106,12 @@ class JwtAuth {
 						'data' => $jwt_decode,
 					);
 				}
-			} else {
-				$data = array(
-					'status' => 'error',
-					'code' => 400,
-					'msg' => 'Datos de acceso incorrectos.'
-				);
 			}
 		} else {
 			$data = array(
 				'status' => 'error',
 				'code' => 400,
-				'msg' => 'Usuario inactivo.'
+				'msg' => 'Datos de acceso incorrectos.'
 			);
 		}
 
