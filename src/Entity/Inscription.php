@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Inscription
  *
- * @ORM\Table(name="inscription", indexes={@ORM\Index(name="fk_inscription_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_inscription_class1_idx", columns={"class_id"}), @ORM\Index(name="fk_inscription_user1_idx", columns={"user_id"})})
+ * @ORM\Table(name="inscription", indexes={@ORM\Index(name="fk_inscription_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_inscription_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_inscription_cohort1_idx", columns={"cohort_id"})})
  * @ORM\Entity
  */
 class Inscription
@@ -43,14 +43,14 @@ class Inscription
     private $updateTime;
 
     /**
-     * @var \Lection
+     * @var \Cohort
      *
-     * @ORM\ManyToOne(targetEntity="Lection")
+     * @ORM\ManyToOne(targetEntity="Cohort")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="class_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cohort_id", referencedColumnName="id")
      * })
      */
-    private $class;
+    private $cohort;
 
     /**
      * @var \Student
@@ -113,14 +113,14 @@ class Inscription
         return $this;
     }
 
-    public function getClass(): ?Lection
+    public function getCohort(): ?Cohort
     {
-        return $this->class;
+        return $this->cohort;
     }
 
-    public function setClass(?Lection $class): self
+    public function setCohort(?Cohort $cohort): self
     {
-        $this->class = $class;
+        $this->cohort = $cohort;
 
         return $this;
     }

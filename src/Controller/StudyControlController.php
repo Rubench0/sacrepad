@@ -214,6 +214,38 @@ class StudyControlController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/studycontrol/get/notauth/selects", name="studycontrol_view_notauth", methods={"POST"})
+	 */
+	public function getNotAuthSelects(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$createdAt = new \Datetime('now');
+		$table = $request->request->get('table');
+
+		$data = array();
+			$em = $this->getDoctrine()->getManager();
+			switch ($table) {
+				case 'cohorts':
+					$records =  $em->getRepository(Cohort::class)->findAll();
+					foreach ($records as $key => $value) {
+						$data[] = [
+							'value' => $records[$key]->getId(),
+							'text' => $records[$key]->getCode(),
+							'year' => $records[$key]->getYear(),
+						];
+					}
+				break;
+			}
+
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+
+		return $helpers->json($response);
+	}
+
+	/**
 	 * @Route("/studycontrol/subject/new", name="studycontrol_subject_new", methods={"POST"})
 	 */
 	public function SubjectRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
@@ -315,13 +347,14 @@ class StudyControlController extends AbstractController {
 				case 'Lection':
 					$lection =  $em->getRepository(Lection::class)->findAll();
 					foreach ($lection as $key => $value) {
-						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId(),'aproved' => true));
+						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('aproved' => true));
+						//$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId(),'aproved' => true));
 						$data[] = [
 							'id' => $lection[$key]->getId(),
 							'code' => $lection[$key]->getCode(),
 							'subject' => $lection[$key]->getSubject()->getName(),
 							'classroom' => $lection[$key]->getClassroom()->getName(),
-							'limit' => $lection[$key]->getLimix(),
+							//'limit' => $lection[$key]->getLimix(),
 							'inscriptions' => count($inscriptions),
 							'facilitator' => $lection[$key]->getFacilitator()->getName().' '.$lection[$key]->getFacilitator()->getSurname(),
 						];
@@ -382,15 +415,15 @@ class StudyControlController extends AbstractController {
 							'hours' => $schedule[$key]->getHours(),
 						];
 					}
-					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$Lection->getId(),'aproved' => true));
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('aproved' => true));
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
 						'subject' => $Lection->getSubject()->getId(),
 						'classroom' => $Lection->getClassroom()->getId(),
 						'facilitator' => $Lection->getFacilitator()->getId(),
-						'limit' => $Lection->getLimix(),
-						'inscriptions' => count($inscriptions),
+						//'limit' => $Lection->getLimix(),
+						//'inscriptions' => count($inscriptions),
 						'days' => $days,
 					];
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de clase',$identity->id);
@@ -596,7 +629,6 @@ class StudyControlController extends AbstractController {
 	 			$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
 	 			$subject_id = (isset($form->subject)) ? $form->subject : null;
 	 			$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
-	 			$limit = (isset($form->limit)) ? $form->limit : null;
 
 				if ($code != null) {
 					$em = $this->getDoctrine()->getManager();
@@ -610,7 +642,6 @@ class StudyControlController extends AbstractController {
 						$Lection->setFacilitator($facilitator);
 						$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
 						$Lection->setSubject($subject);
-						$Lection->setLimix($limit);
 						$Lection->setCreateTime($createdAt);
 						$user = $em->getRepository(User::class)->findOneById($identity->id);
 						$Lection->setUser($user);

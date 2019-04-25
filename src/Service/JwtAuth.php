@@ -17,100 +17,108 @@ class JwtAuth {
 		$this->manager = $manager;
 		$this->key = 'holak$$e3213123';
 	}
-	
+
 	public function singup($email, $password, $getHash = null) {
 		$user = $this->manager->getRepository(User::class)->findOneBy(array(
 			'email'=>$email,
 			'password'=>$password
 		));
 
-		$singup = false;
-		if (is_object($user)) {
-			$singup = true;
-		}
-
-		if ($singup == true) {
-
-			if ($user->getUserData() != null) {
-				$token = array(
-					'id' => $user->getId(),
-					'email' => $user->getEmail(),
-					'login' => $user->getLogin(),
-					'active' => $user->getIsActive(),
-					'rol' => $user->getRole(),
-					'name' => $user->getUserData()->getName(),
-					'surname' => $user->getUserData()->getSurname(),
-					'phone' => $user->getUserData()->getPhone(),
-					'type' => '1',
-					'iat' => time(),
-					'exp' => time() + (7 * 24 * 60 * 60)
-				);
-			} elseif ($user->getStudent() != null) {
-				$token = array(
-					'id' => $user->getId(),
-					'email' => $user->getEmail(),
-					'login' => $user->getLogin(),
-					'active' => $user->getIsActive(),
-					'rol' => $user->getRole(),
-					'name' => $user->getStudent()->getName(),
-					'surname' => $user->getStudent()->getSurname(),
-					'phone' => $user->getStudent()->getPhone(),
-					'type' => '3',
-					'iat' => time(),
-					'exp' => time() + (7 * 24 * 60 * 60)
-				);
-			} elseif ($user->getFacilitator() != null) {
-				$token = array(
-					'id' => $user->getId(),
-					'email' => $user->getEmail(),
-					'login' => $user->getLogin(),
-					'active' => $user->getIsActive(),
-					'rol' => $user->getRole(),
-					'name' => $user->getFacilitator()->getName(),
-					'surname' => $user->getFacilitator()->getSurname(),
-					'phone' => $user->getFacilitator()->getPhone(),
-					'type' => '2',
-					'iat' => time(),
-					'exp' => time() + (7 * 24 * 60 * 60)
-				);
+		if ($user->getIsActive() == true) {
+			$singup = false;
+			if (is_object($user)) {
+				$singup = true;
 			}
 
+			if ($singup == true) {
 
-			$jwt = JWT::encode($token, $this->key, 'HS256');
-			$jwt_decode = JWT::decode($jwt, $this->key, array('HS256'));
-			
-			$dateAccess = new \Datetime('now');
-			$user_id = $this->manager->getRepository(User::class)->findOneById($user->getId());
-			$BinnacleAccessUser = new BinnacleAccessUser();
-			$BinnacleAccessUser->setDate($dateAccess);
-			$so = $this->getSO();
-			$BinnacleAccessUser->setSystem($so);
-			$device = $this->getDevice();
-			$BinnacleAccessUser->setDevice($device);
-			$ip = $this->getIP();
-			$BinnacleAccessUser->setAdreess($ip);
-			$BinnacleAccessUser->setUser($user_id);
-			$this->manager->persist($BinnacleAccessUser);
-			$this->manager->flush();
+				if ($user->getUserData() != null) {
+					$token = array(
+						'id' => $user->getId(),
+						'email' => $user->getEmail(),
+						'login' => $user->getLogin(),
+						'active' => $user->getIsActive(),
+						'rol' => $user->getRole(),
+						'name' => $user->getUserData()->getName(),
+						'surname' => $user->getUserData()->getSurname(),
+						'phone' => $user->getUserData()->getPhone(),
+						'type' => '1',
+						'iat' => time(),
+						'exp' => time() + (7 * 24 * 60 * 60)
+					);
+				} elseif ($user->getStudent() != null) {
+					$token = array(
+						'id' => $user->getId(),
+						'email' => $user->getEmail(),
+						'login' => $user->getLogin(),
+						'active' => $user->getIsActive(),
+						'rol' => $user->getRole(),
+						'name' => $user->getStudent()->getName(),
+						'surname' => $user->getStudent()->getSurname(),
+						'phone' => $user->getStudent()->getPhone(),
+						'type' => '3',
+						'iat' => time(),
+						'exp' => time() + (7 * 24 * 60 * 60)
+					);
+				} elseif ($user->getFacilitator() != null) {
+					$token = array(
+						'id' => $user->getId(),
+						'email' => $user->getEmail(),
+						'login' => $user->getLogin(),
+						'active' => $user->getIsActive(),
+						'rol' => $user->getRole(),
+						'name' => $user->getFacilitator()->getName(),
+						'surname' => $user->getFacilitator()->getSurname(),
+						'phone' => $user->getFacilitator()->getPhone(),
+						'type' => '2',
+						'iat' => time(),
+						'exp' => time() + (7 * 24 * 60 * 60)
+					);
+				}
 
-			if ($getHash == null) {
-				$data = array(
-					'status' => 'success',
-					'code' => 200,
-					'data' => $jwt,
-				);
+
+				$jwt = JWT::encode($token, $this->key, 'HS256');
+				$jwt_decode = JWT::decode($jwt, $this->key, array('HS256'));
+
+				$dateAccess = new \Datetime('now');
+				$user_id = $this->manager->getRepository(User::class)->findOneById($user->getId());
+				$BinnacleAccessUser = new BinnacleAccessUser();
+				$BinnacleAccessUser->setDate($dateAccess);
+				$so = $this->getSO();
+				$BinnacleAccessUser->setSystem($so);
+				$device = $this->getDevice();
+				$BinnacleAccessUser->setDevice($device);
+				$ip = $this->getIP();
+				$BinnacleAccessUser->setAdreess($ip);
+				$BinnacleAccessUser->setUser($user_id);
+				$this->manager->persist($BinnacleAccessUser);
+				$this->manager->flush();
+
+				if ($getHash == null) {
+					$data = array(
+						'status' => 'success',
+						'code' => 200,
+						'data' => $jwt,
+					);
+				} else {
+					$data = array(
+						'status' => 'success',
+						'code' => 200,
+						'data' => $jwt_decode,
+					);
+				}
 			} else {
 				$data = array(
-					'status' => 'success',
-					'code' => 200,
-					'data' => $jwt_decode,
+					'status' => 'error',
+					'code' => 400,
+					'msg' => 'Datos de acceso incorrectos.'
 				);
 			}
 		} else {
 			$data = array(
 				'status' => 'error',
 				'code' => 400,
-				'msg' => 'Datos de acceso incorrectos.'
+				'msg' => 'Usuario inactivo.'
 			);
 		}
 

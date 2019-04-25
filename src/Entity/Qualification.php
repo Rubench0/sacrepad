@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Qualification
  *
- * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_qualification_inscription1_idx", columns={"inscription_id"})})
+ * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_subject1_idx", columns={"subject_id"}), @ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"})})
  * @ORM\Entity
  */
 class Qualification
@@ -29,6 +29,13 @@ class Qualification
     private $note;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="inscription_id", type="integer", nullable=false)
+     */
+    private $inscriptionId;
+
+    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=true)
@@ -43,14 +50,14 @@ class Qualification
     private $updateTime;
 
     /**
-     * @var \Inscription
+     * @var \Subject
      *
-     * @ORM\ManyToOne(targetEntity="Inscription")
+     * @ORM\ManyToOne(targetEntity="Subject")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="inscription_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="subject_id", referencedColumnName="id")
      * })
      */
-    private $inscription;
+    private $subject;
 
     /**
      * @var \User
@@ -79,6 +86,18 @@ class Qualification
         return $this;
     }
 
+    public function getInscriptionId(): ?int
+    {
+        return $this->inscriptionId;
+    }
+
+    public function setInscriptionId(int $inscriptionId): self
+    {
+        $this->inscriptionId = $inscriptionId;
+
+        return $this;
+    }
+
     public function getCreateTime(): ?\DateTimeInterface
     {
         return $this->createTime;
@@ -103,14 +122,14 @@ class Qualification
         return $this;
     }
 
-    public function getInscription(): ?Inscription
+    public function getSubject(): ?Subject
     {
-        return $this->inscription;
+        return $this->subject;
     }
 
-    public function setInscription(?Inscription $inscription): self
+    public function setSubject(?Subject $subject): self
     {
-        $this->inscription = $inscription;
+        $this->subject = $subject;
 
         return $this;
     }

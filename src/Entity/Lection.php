@@ -29,13 +29,6 @@ class Lection
     private $code;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="limix", type="integer", nullable=true)
-     */
-    private $limix;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=true)
@@ -102,18 +95,6 @@ class Lection
     public function setCode(?string $code): self
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    public function getLimix(): ?int
-    {
-        return $this->limix;
-    }
-
-    public function setLimix(?int $limix): self
-    {
-        $this->limix = $limix;
 
         return $this;
     }

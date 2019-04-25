@@ -57,6 +57,13 @@ class Cohort
     private $code;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="limit", type="integer", nullable=true)
+     */
+    private $limit;
+
+    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=true)
@@ -141,6 +148,18 @@ class Cohort
     public function setCode(?string $code): self
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function setLimit(?int $limit): self
+    {
+        $this->limit = $limit;
 
         return $this;
     }

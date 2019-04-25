@@ -13,10 +13,12 @@ use App\Entity\User;
 use App\Entity\UserData;
 use App\Entity\Student;
 use App\Entity\Facilitator;
+use App\Entity\Inscription;
+use App\Entity\Cohort;
 
 
 class UsersController extends AbstractController {
-	
+
 	/**
 	 * @Route("/user/new", name="user_new", methods={"POST"})
 	 */
@@ -89,6 +91,7 @@ class UsersController extends AbstractController {
 							$helpers->binnacleAction('Facilitator','registro',$createdAt,'Agregando datos de usuario facilitador.',$identity->id);
 							$password = hash('sha256', $identification);
 							$User->setPassword($password);
+							$rol = 'ROLE_USER_F';
 							break;
 						case '3':
 							$Student = new Student();
@@ -108,10 +111,11 @@ class UsersController extends AbstractController {
 							$helpers->binnacleAction('Student','registro',$createdAt,'Inscribiendo estudiante.',$identity->id);
 							$password = hash('sha256', $password);
 							$User->setPassword($password);
+							$rol = 'ROLE_USER_S';
 							break;
 					}
 					$User->setLogin($login);
-					$User->setEmail($email); 
+					$User->setEmail($email);
 					$User->setIsActive(1);
 					$User->setRole($rol);
 					$User->setCreateTime($createdAt);
@@ -135,7 +139,6 @@ class UsersController extends AbstractController {
 	 					);
 					}
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
@@ -176,6 +179,7 @@ class UsersController extends AbstractController {
 			$phone = (isset($form->phone)) ? $form->phone : null;
 			$identification = (isset($form->identification)) ? $form->identification : null;
 			$profession = (isset($form->profession)) ? $form->profession : null;
+			$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
 
 			$emailConstraint = new Assert\Email();
 			$emailConstraint->message = 'El email no es valido';
@@ -187,7 +191,7 @@ class UsersController extends AbstractController {
 				$isset_identification = $em->getRepository(Student::class)->findBy(array('identification' => $identification));
 				$isset_email = $em->getRepository(User::class)->findBy(array('email' => $email));
 				$isset_login = $em->getRepository(User::class)->findBy(array('login' => $login));
-				
+
 				if (count($isset_identification) != 0) {
 					$response = array(
 						'status' => 'error',
@@ -208,9 +212,9 @@ class UsersController extends AbstractController {
 						'msg' => 'El correo ya se encuentra registrado.',
 					);
 				}  else {
-					
 					$User = new User();
 					$Student = new Student();
+					$Inscription = new Inscription();
 					$Student->setIdentification($identification);
 					$Student->setName($name);
 					$Student->setName2($name2);
@@ -226,17 +230,26 @@ class UsersController extends AbstractController {
 					$password = hash('sha256', $password);
 					$User->setPassword($password);
 					$User->setLogin($login);
-					$User->setEmail($email); 
-					$User->setIsActive(1);
+					$User->setEmail($email);
+					$User->setIsActive(0);
 					$User->setRole($rol);
 					$User->setCreateTime($createdAt);
 					$em->persist($User);
 					$em->flush();
 					$helpers->binnacleAction('User','registro',$createdAt,'Agregando usuario.','');
+					$Inscription->setAproved(0);
+					$cohort = $em->getRepository(Cohort::class)->findOneById($cohort_id);
+					$Inscription->setCohort($cohort);
+					$Inscription->setStudent($Student);
+					$Inscription->setUser($User);
+					$Inscription->setCreateTime($createdAt);
+					$em->persist($Inscription);
+					$em->flush();
+					$helpers->binnacleAction('Inscription','registro',$createdAt,'Pre-inscripción registrada.','');
 					$response = array(
 						'status' => 'success',
 						'code' => 200,
-						'msg' => 'Estudiante inscrito existosamente, redirigiendo al login...',
+						'msg' => 'Estudiante Pre - inscrito existosamente, redirigiendo al login...',
 						'user' => $User
 					);
 	 			}
@@ -260,7 +273,7 @@ class UsersController extends AbstractController {
 			$form = json_decode($json);
 
  			$User =  $em->getRepository(User::class)->findOneById($form->id);
-			
+
 			$response = array(
 				'status' => 'error',
 				'code' => 400,
@@ -313,7 +326,7 @@ class UsersController extends AbstractController {
 	 					);
 					}*/
 				}
-	 		
+
 	 		}
 		} else {
 			$response = array(
@@ -389,7 +402,7 @@ class UsersController extends AbstractController {
 						'phone' => $user->getUserData()->getPhone(),
 						'type' => '1',
 					];
-				
+
 			} elseif ($user->getFacilitator())  {
 				$data = [
 						'id' => $user->getId(),
@@ -451,7 +464,7 @@ class UsersController extends AbstractController {
 			$form = json_decode($json);
 
  			$User =  $em->getRepository(User::class)->findOneById($form->id);
-			
+
 			$response = array(
 				'status' => 'error',
 				'code' => 400,
@@ -484,7 +497,7 @@ class UsersController extends AbstractController {
 						'msg' => 'La contraseña actual no coincide.',
 					);
 				}
-	 		
+
 	 		}
 		} else {
 			$response = array(
@@ -512,7 +525,7 @@ class UsersController extends AbstractController {
 
  			$User =  $em->getRepository(User::class)->findOneById($form->id);
  			$user_update =  $em->getRepository(User::class)->findOneById($identity->id);
-			
+
 			$response = array(
 				'status' => 'error',
 				'code' => 400,
