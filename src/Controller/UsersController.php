@@ -117,6 +117,7 @@ class UsersController extends AbstractController {
 					$User->setLogin($login);
 					$User->setEmail($email);
 					$User->setIsActive(1);
+					$User->setAttempts(0);
 					$User->setRole($rol);
 					$User->setCreateTime($createdAt);
 
@@ -232,6 +233,7 @@ class UsersController extends AbstractController {
 					$User->setLogin($login);
 					$User->setEmail($email);
 					$User->setIsActive(0);
+					$User->setAttempts(0);
 					$User->setRole($rol);
 					$User->setCreateTime($createdAt);
 					$em->persist($User);

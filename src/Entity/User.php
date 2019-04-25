@@ -57,6 +57,13 @@ class User
     private $role;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="attempts", type="integer", nullable=true)
+     */
+    private $attempts;
+
+    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=true)
@@ -161,6 +168,18 @@ class User
     public function setRole(?string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getAttempts(): ?int
+    {
+        return $this->attempts;
+    }
+
+    public function setAttempts(?int $attempts): self
+    {
+        $this->attempts = $attempts;
 
         return $this;
     }

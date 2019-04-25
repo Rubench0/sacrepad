@@ -19,19 +19,21 @@ class JwtAuth {
 	}
 
 	public function singup($email, $password, $getHash = null) {
+		$user_verify = $this->manager->getRepository(User::class)->findOneBy(array(
+			'email'=>$email));
 		$user = $this->manager->getRepository(User::class)->findOneBy(array(
 			'email'=>$email,
 			'password'=>$password
 		));
-
-		if (is_object($user)) {
-			if ($user->getIsActive() == false) {
-				$data = array(
+		
+		if ($user_verify->getIsActive() == false) {
+			$data = array(
 					'status' => 'error',
 					'code' => 400,
 					'msg' => 'Usuario inactivo.'
 				);
-			} else {
+		} else {
+			if (is_object($user)) {
 				if ($user->getUserData() != null) {
 					$token = array(
 						'id' => $user->getId(),
@@ -92,6 +94,9 @@ class JwtAuth {
 				$BinnacleAccessUser->setUser($user_id);
 				$this->manager->persist($BinnacleAccessUser);
 				$this->manager->flush();
+				$user->setAttempts(0);
+				$this->manager->persist($user);
+				$this->manager->flush();
 
 				if ($getHash == null) {
 					$data = array(
@@ -106,13 +111,29 @@ class JwtAuth {
 						'data' => $jwt_decode,
 					);
 				}
+			} else {
+				$counter = $user_verify->getAttempts();
+				if ($counter >= 2) {
+					$user_verify->setIsActive(0);
+					$this->manager->persist($user_verify);
+					$this->manager->flush();
+					$data = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'Datos de acceso incorrectos (3/3). Su cuenta ha sido deshabilitada.'
+					);
+				} else {
+					$counter = $counter + 1;
+					$user_verify->setAttempts($counter);
+					$this->manager->persist($user_verify);
+					$this->manager->flush();
+					$data = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'Datos de acceso incorrectos ('.$counter.'/3). Tiene 3 intentos antes de que su cuenta sea deshabilitada.'
+					);
+				}
 			}
-		} else {
-			$data = array(
-				'status' => 'error',
-				'code' => 400,
-				'msg' => 'Datos de acceso incorrectos.'
-			);
 		}
 
 		return $data;
