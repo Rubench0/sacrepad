@@ -361,6 +361,24 @@ class StudyControlController extends AbstractController {
 					}
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando lista de clases.',$identity->id);
 				break;
+				case 'Cohort':
+					$cohorts =  $em->getRepository(cohort::class)->findAll();
+					foreach ($cohorts as $key => $value) {
+						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $cohorts[$key]->getId(),'aproved' => true));
+						//$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$cohorts[$key]->getId(),'aproved' => true));
+						$data[] = [
+							'id' => $cohorts[$key]->getId(),
+							'code' => $cohorts[$key]->getCode(),
+							'year' => $cohorts[$key]->getYear(),
+							'limit' => $cohorts[$key]->getLimit(),
+							'initial' => $cohorts[$key]->getInitialDate(),
+							'final' => $cohorts[$key]->getFinalDate(),
+							//'limit' => $cohort[$key]->getLimix(),
+							'inscriptions' => count($inscriptions),
+						];
+					}
+					$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de clases.',$identity->id);
+				break;
 			}
 			$response = array(
 				'status' => 'success',
