@@ -22,6 +22,7 @@ use App\Entity\NDays;
 use App\Entity\NDaysHasClass;
 use App\Entity\Inscription;
 use App\Entity\NRequirementsStudent;
+use App\Entity\InscriptionHasNRequirementsStudent;
 
 
 class StudyControlController extends AbstractController {
@@ -1034,27 +1035,50 @@ class StudyControlController extends AbstractController {
 			$em = $this->getDoctrine()->getManager();
 			$id_inscription = $request->request->get('id_inscription');
 			$id_cohort = $request->request->get('id_cohort');
+			$selected = json_decode($request->request->get('selected'));
+			$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $id_cohort,'aproved' => true));
+			$cohort =  $em->getRepository(Cohort::class)->findOneById($id_cohort);
 			$identity = $jwtauth->checkToken($token, true);
 			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('cohort' => $id_cohort,'id' => $id_inscription));
 			$aproved = $inscription->getAproved();
-			// HAY QUE AGREGAR GUARDAR LOS REQUISITOS SELECCIONADOS EN LA TABLA MUCHOS A MUCHOS
-			if ($aproved != 'false') {
-				$inscription->setAproved(1);
-				$msg = 'Estudiante aprobado';
-			} else {
-				$inscription->setAproved(0);
-				$msg = 'Estudiante desaprobado';
-			}
-			
-			$helpers->binnacleAction('Inscription','aprobar',$createdAt,'Aproada inscripcion id='.$id_inscription.'',$identity->id);
-			$em->persist($inscription);
-			$em->flush();
-			$response = array(
-				'status' => 'success',
-				'code' => 200,
-				'msg' => $msg,
-			);
-			
+				if ($aproved != 'false') {
+					$aprov = 1;
+					if (count($inscriptions) >= $cohort->getLimit()) {
+						$msg = 'Limite de inscripciones alcanzado';
+					} else {
+						$inscription->setAproved(1);
+						foreach ($selected as $key => $val) {
+							$InscriptionHasNRequirementsStudent = new InscriptionHasNRequirementsStudent();
+							$InscriptionHasNRequirementsStudent->setInscription($inscription);
+							$requirement =  $em->getRepository(NRequirementsStudent::class)->findOneById($selected[$key]->value);
+							$InscriptionHasNRequirementsStudent->setNRequirementsStudent($requirement);
+							$user = $em->getRepository(User::class)->findOneById($identity->id);
+							$InscriptionHasNRequirementsStudent->setUser($user);
+							$InscriptionHasNRequirementsStudent->setCreateTime($createdAt);
+							$em->persist($InscriptionHasNRequirementsStudent);
+							$em->flush();
+						}
+						$msg = 'Inscripción aprobada';
+					}
+				} else {
+					$inscription->setAproved(0);
+					$requirements =  $em->getRepository(InscriptionHasNRequirementsStudent::class)->findBy(array('inscription' => $id_inscription));
+					foreach ($requirements as $key => $val) {
+						$em->remove($requirements[$key]);
+						$em->flush();
+					}
+					$aprov = 0;
+					$msg = 'Inscripción desaprobada';
+				}
+				$helpers->binnacleAction('Inscription','aprobar',$createdAt,$msg.' id='.$id_inscription.'',$identity->id);
+				$em->persist($inscription);
+				$em->flush();
+				$response = array(
+					'status' => 'success',
+					'code' => 200,
+					'msg' => $msg,
+					'aproved' => $aprov,
+				);
 		} else {
 			$response = array(
 				'status' => 'error',
@@ -1065,7 +1089,6 @@ class StudyControlController extends AbstractController {
 
 		return $helpers->json($response);
 	}
-			
 }
 
 
