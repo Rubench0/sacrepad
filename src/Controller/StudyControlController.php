@@ -472,6 +472,21 @@ class StudyControlController extends AbstractController {
 					}
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando asignaturas del estudiante id='.$user->getId().'',$identity->id);
 				break;
+				case 'Cohort':
+					$Cohort =  $em->getRepository(Cohort::class)->findOneById($id_data);
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $Cohort->getId(),'aproved' => true));
+					$data = [
+						'id' => $Cohort->getId(),
+						'code' => $Cohort->getCode(),
+						'year' => $Cohort->getYear(),
+						'limit' => $Cohort->getLimit(),
+						'initial' => $Cohort->getInitialDate(),
+						'final' => $Cohort->getFinalDate(),
+						'active' => $Cohort->getActive(),
+						'inscriptions' => count($inscriptions),
+					];
+					$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando datos del curso',$identity->id);
+				break;
 			}
 			$response = array(
 				'status' => 'success',
@@ -846,16 +861,16 @@ class StudyControlController extends AbstractController {
 			$em = $this->getDoctrine()->getManager();
 			$identity = $jwtauth->checkToken($token, true);
 			$id = $request->request->get('id');
-			$students =  $em->getRepository(Inscription::class)->findBy(array('class' => $id));
+			$students =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $id));
 				foreach ($students as $key => $value) {
 					$data[] = [
-						'id' => $students[$key]->getStudent()->getId(),
+						'id' => $students[$key]->getId(),
 						'name' => $students[$key]->getStudent()->getName().' '.$students[$key]->getStudent()->getSurname(),
 						'identification' => $students[$key]->getStudent()->getIdentification(),
 						'aproved' => $students[$key]->getAproved(),
 					];
 				}
-			$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando lista de alumnos inscritos.',$identity->id);
+			$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando lista de alumnos pre-inscritos.',$identity->id);
 			$response = array(
 				'status' => 'success',
 				'code' => 200,
@@ -1017,11 +1032,12 @@ class StudyControlController extends AbstractController {
 
 		if ($auth_check) {
 			$em = $this->getDoctrine()->getManager();
-			$id_student = $request->request->get('id_student');
-			$id_class = $request->request->get('id_class');
+			$id_inscription = $request->request->get('id_inscription');
+			$id_cohort = $request->request->get('id_cohort');
 			$identity = $jwtauth->checkToken($token, true);
-			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('class' => $id_class,'student' => $id_student));
+			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('cohort' => $id_cohort,'id' => $id_inscription));
 			$aproved = $inscription->getAproved();
+			// HAY QUE AGREGAR GUARDAR LOS REQUISITOS SELECCIONADOS EN LA TABLA MUCHOS A MUCHOS
 			if ($aproved != 'false') {
 				$inscription->setAproved(1);
 				$msg = 'Estudiante aprobado';
@@ -1030,7 +1046,7 @@ class StudyControlController extends AbstractController {
 				$msg = 'Estudiante desaprobado';
 			}
 			
-			$helpers->binnacleAction('Inscription','aprobar',$createdAt,'Aproada inscripcion del estudiante id='.$id_student.' de la clase id='.$id_class.'. ',$identity->id);
+			$helpers->binnacleAction('Inscription','aprobar',$createdAt,'Aproada inscripcion id='.$id_inscription.'',$identity->id);
 			$em->persist($inscription);
 			$em->flush();
 			$response = array(
