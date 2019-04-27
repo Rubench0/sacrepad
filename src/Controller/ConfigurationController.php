@@ -298,7 +298,7 @@ class ConfigurationController extends AbstractController {
 			$response = array(
 				'status' => 'success',
 				'code' => 200,
-				'data' => 'Usuario eliminado.',
+				'msg' => 'Registro eliminado con exito.',
 			);
 			
 		} else {
@@ -633,6 +633,7 @@ class ConfigurationController extends AbstractController {
 	 			$initialDate = (isset($form->initialDate)) ? $form->initialDate : null;
 	 			$finalDate = (isset($form->finalDate)) ? $form->finalDate : null;
 	 			$year = (isset($form->year)) ? $form->year : null;
+	 			$limit = (isset($form->limit)) ? $form->limit : null;
 
 				if ($code != null) {
 					$em = $this->getDoctrine()->getManager();
@@ -646,6 +647,7 @@ class ConfigurationController extends AbstractController {
 						$Cohort->setFinalDate($datefin);
 						$Cohort->setYear($year);
 						$Cohort->setCode($code);
+						$Cohort->setLimit($limit);
 						$Cohort->setCreateTime($createdAt);
 						$user = $em->getRepository(User::class)->findOneById($identity->id);
 						$Cohort->setUser($user);
