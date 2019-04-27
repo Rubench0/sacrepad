@@ -667,7 +667,6 @@ class ConfigurationController extends AbstractController {
 	 					);
 					}
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
@@ -839,7 +838,7 @@ class ConfigurationController extends AbstractController {
 			$response = array(
 				'status' => 'success',
 				'code' => 200,
-				'data' => 'Registro eliminado.',
+				'msg' => 'Registro eliminado.',
 			);
 			
 		} else {
