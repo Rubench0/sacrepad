@@ -1089,6 +1089,44 @@ class StudyControlController extends AbstractController {
 
 		return $helpers->json($response);
 	}
-}
 
+	/**
+	 * @Route("/studycontrol/get/lections", name="studycontrol_get_lections", methods={"POST"})
+	 */
+	public function GetLections(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_cohort = $request->request->get('id_cohort');
+			$subjetcs =  $em->getRepository(Subject::class)->findBy(array('cohort' => $id_cohort));
+			$identity = $jwtauth->checkToken($token, true);
+			$data = array();
+			foreach ($subjetcs as $key => $value) {
+				$data[] = [
+					'id' => $subjetcs[$key]->getId(),
+					'name' => $subjetcs[$key]->getName(),
+					'description' => $subjetcs[$key]->getDescription(),
+					'classification' => $subjetcs[$key]->getNClassificationSubject()->getName(),
+					'type' => $subjetcs[$key]->getNTypesSubject()->getName(),
+				];
+			}
+			$helpers->binnacleAction('Subject','consulta',$createdAt,'consulta de materias de la cohorte id='.$id_cohort.'',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+}
 
