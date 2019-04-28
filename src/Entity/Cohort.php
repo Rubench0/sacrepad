@@ -59,7 +59,7 @@ class Cohort
     /**
      * @var int|null
      *
-     * @ORM\Column(name="limit", type="integer", nullable=true)
+     * @ORM\Column(name="limix", type="integer", nullable=true)
      */
     private $limit;
 

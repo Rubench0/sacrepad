@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * User
  *
- * @ORM\Table(name="user", indexes={@ORM\Index(name="fk_user_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_user_user_data_idx", columns={"user_data_id"}), @ORM\Index(name="fk_user_facilitator1_idx", columns={"facilitator_id"})})
+ * @ORM\Table(name="user", indexes={@ORM\Index(name="fk_user_student1_idx", columns={"student_id"}), @ORM\Index(name="fk_user_facilitator1_idx", columns={"facilitator_id"}), @ORM\Index(name="fk_user_user_data_idx", columns={"user_data_id"})})
  * @ORM\Entity
  */
 class User
@@ -57,13 +57,6 @@ class User
     private $role;
 
     /**
-     * @var int|null
-     *
-     * @ORM\Column(name="attempts", type="integer", nullable=true)
-     */
-    private $attempts;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="create_time", type="datetime", nullable=true)
@@ -76,6 +69,13 @@ class User
      * @ORM\Column(name="update_time", type="datetime", nullable=true)
      */
     private $updateTime;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="attempts", type="integer", nullable=true)
+     */
+    private $attempts;
 
     /**
      * @var \Facilitator
@@ -172,18 +172,6 @@ class User
         return $this;
     }
 
-    public function getAttempts(): ?int
-    {
-        return $this->attempts;
-    }
-
-    public function setAttempts(?int $attempts): self
-    {
-        $this->attempts = $attempts;
-
-        return $this;
-    }
-
     public function getCreateTime(): ?\DateTimeInterface
     {
         return $this->createTime;
@@ -204,6 +192,18 @@ class User
     public function setUpdateTime(?\DateTimeInterface $updateTime): self
     {
         $this->updateTime = $updateTime;
+
+        return $this;
+    }
+
+    public function getAttempts(): ?int
+    {
+        return $this->attempts;
+    }
+
+    public function setAttempts(?int $attempts): self
+    {
+        $this->attempts = $attempts;
 
         return $this;
     }

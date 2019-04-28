@@ -340,13 +340,19 @@ class StudyControlController extends AbstractController {
 							'id' => $subject[$key]->getId(),
 							'name' => $subject[$key]->getName(),
 							'classification' => $subject[$key]->getNClassificationSubject()->getName(),
+							'role' => $identity->rol,
 							'cohort' => $subject[$key]->getCohort()->getCode(),
 						];
 					}
 					$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando lista de asignaturas.',$identity->id);
 				break;
 				case 'Lection':
-					$lection =  $em->getRepository(Lection::class)->findAll();
+					if ($identity->rol == 'ROLE_USER_F') {
+						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$lection =  $em->getRepository(Lection::class)->findBy(array('facilitator' => $user->getFacilitator()));
+					} else {
+						$lection =  $em->getRepository(Lection::class)->findAll();
+					}
 					foreach ($lection as $key => $value) {
 						$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('aproved' => true));
 						//$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('class'=>$lection[$key]->getId(),'aproved' => true));
@@ -434,15 +440,23 @@ class StudyControlController extends AbstractController {
 							'hours' => $schedule[$key]->getHours(),
 						];
 					}
-					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('aproved' => true));
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $Lection->getSubject()->getCohort()->getId(), 'aproved' => true));
+					$_inscriptions = array();
+					foreach ($inscriptions as $key => $value) {
+						$_inscriptions[] = [
+							'name' => $inscriptions[$key]->getStudent()->getName(),
+							'surname' => $inscriptions[$key]->getStudent()->getSurname(),
+							'identification' => $inscriptions[$key]->getStudent()->getIdentification(),
+						];
+					}
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
-						'subject' => $Lection->getSubject()->getId(),
-						'classroom' => $Lection->getClassroom()->getId(),
-						'facilitator' => $Lection->getFacilitator()->getId(),
+						'subject' => array('id' => $Lection->getSubject()->getId(),'name' => $Lection->getSubject()->getName(),'cohort' => $Lection->getSubject()->getCohort()->getCode()),
+						'classroom' => array('id' => $Lection->getClassroom()->getId(),'name' => $Lection->getClassroom()->getName()),
+						'facilitator' => array('id' => $Lection->getFacilitator()->getId(),'name' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname()),
 						//'limit' => $Lection->getLimix(),
-						//'inscriptions' => count($inscriptions),
+						'inscriptions' => $_inscriptions,
 						'days' => $days,
 					];
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando datos de clase',$identity->id);

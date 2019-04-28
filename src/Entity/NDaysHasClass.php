@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * NDaysHasClass
  *
- * @ORM\Table(name="n_days_has_class", indexes={@ORM\Index(name="fk_n_days_has_class_class1_idx", columns={"class_id"}), @ORM\Index(name="fk_n_days_has_class_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_n_days_has_class_n_days1_idx", columns={"n_days_id"})})
+ * @ORM\Table(name="n_days_has_class", indexes={@ORM\Index(name="fk_n_days_has_class_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_n_days_has_class_class1_idx", columns={"class_id"}), @ORM\Index(name="fk_n_days_has_class_n_days1_idx", columns={"n_days_id"})})
  * @ORM\Entity
  */
 class NDaysHasClass
