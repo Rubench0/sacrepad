@@ -23,6 +23,7 @@ use App\Entity\NDaysHasClass;
 use App\Entity\Inscription;
 use App\Entity\NRequirementsStudent;
 use App\Entity\InscriptionHasNRequirementsStudent;
+use App\Entity\Qualification;
 
 
 class StudyControlController extends AbstractController {
@@ -452,7 +453,13 @@ class StudyControlController extends AbstractController {
 					$data = [
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
-						'subject' => array('id' => $Lection->getSubject()->getId(),'name' => $Lection->getSubject()->getName(),'cohort' => $Lection->getSubject()->getCohort()->getCode()),
+						'subject' => array(
+							'id' => $Lection->getSubject()->getId(),
+							'name' => $Lection->getSubject()->getName(),
+							'cohort' => array(
+								'code' => $Lection->getSubject()->getCohort()->getCode(),'id' => $Lection->getSubject()->getCohort()->getId()
+							)
+						),
 						'classroom' => array('id' => $Lection->getClassroom()->getId(),'name' => $Lection->getClassroom()->getName()),
 						'facilitator' => array('id' => $Lection->getFacilitator()->getId(),'name' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname()),
 						//'limit' => $Lection->getLimix(),
@@ -789,6 +796,76 @@ class StudyControlController extends AbstractController {
 	}
 
 	/**
+	 * @Route("/studycontrol/qualitification/new", name="studycontrol_qualitification_new", methods={"POST"})
+	 */
+	public function QualitificationRegistry(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$id_inscription = $request->request->get('id_inscription');
+			$id_subject = $request->request->get('id_subject');
+			$json = $request->request->get('form');
+			$form = json_decode($json);
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'El formulario no puede estar vació.',
+	 		);
+
+	 		if ($form != null) {
+	 			$createdAt = new \Datetime('now');
+				 $identity = $jwtauth->checkToken($token, true);
+
+				 $qualification = (isset($form->qualification)) ? $form->qualification : null;
+
+				if ($id_inscription != null) {
+					$em = $this->getDoctrine()->getManager();
+					$isset_data = $em->getRepository(Qualification::class)->findOneBy(array('inscription' => $id_inscription,'subject' => $id_subject));
+					$Inscription = $em->getRepository(Inscription::class)->findOneById($id_inscription);
+					$Subject = $em->getRepository(Subject::class)->findOneById($id_subject);
+					$user = $em->getRepository(User::class)->findOneById($identity->id);
+					if (!$isset_data) {
+						$Qualification = new Qualification();
+						$Qualification->setQualification($qualification);
+						$Qualification->setInscription($Inscription);
+						$Qualification->setSubject($Subject);
+						$Qualification->setCreateTime($createdAt);
+						$Qualification->setUser($user);
+						$em->persist($Qualification);
+		    			$em->flush();
+		    			$helpers->binnacleAction('Qualification','registro',$createdAt,'Agregando calificación a id='.$id_inscription.'.',$identity->id);
+						$msg = 'Calificación agregada con exito.';
+					} else {
+						$isset_data->setQualification($qualification);
+						$isset_data->setInscription($Inscription);
+						$isset_data->setSubject($Subject);
+						$isset_data->setCreateTime($createdAt);
+						$isset_data->setUser($user);
+						$em->persist($isset_data);
+		    			$em->flush();
+						$helpers->binnacleAction('Qualification','update',$createdAt,'Cambiando calificación a id='.$id_inscription.'.',$identity->id);
+						$msg = 'Calificación cambiada con exito.';
+					}
+					$response = array(
+						'status' => 'success',
+						'code' => 200,
+						'msg' => $msg,
+					 );
+				}
+	 		}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
+
+	/**
 	 * @Route("/studycontrol/data/daysclass", name="studycontrol_view_daysclass", methods={"POST"})
 	 */
 	public function ViewDaysClassDataAll(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
@@ -878,11 +955,18 @@ class StudyControlController extends AbstractController {
 			$id = $request->request->get('id');
 			$students =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $id));
 				foreach ($students as $key => $value) {
+					$qualification =  $em->getRepository(Qualification::class)->findOneBy(array('inscription' => $students[$key]->getId()));
+					if ($qualification) {
+						$qualification = $qualification->getQualification();
+					} else {
+						$qualification = 'N/A';
+					}
 					$data[] = [
 						'id' => $students[$key]->getId(),
 						'name' => $students[$key]->getStudent()->getName().' '.$students[$key]->getStudent()->getSurname(),
 						'identification' => $students[$key]->getStudent()->getIdentification(),
 						'aproved' => $students[$key]->getAproved(),
+						'qualification' => $qualification,
 					];
 				}
 			$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando lista de alumnos pre-inscritos.',$identity->id);

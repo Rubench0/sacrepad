@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Qualification
  *
- * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_subject1_idx", columns={"subject_id"}), @ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"})})
+ * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_subject1_idx", columns={"subject_id"}), @ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_qualification_inscription1_idx", columns={"inscription_id"})})
  * @ORM\Entity
  */
 class Qualification
@@ -22,18 +22,11 @@ class Qualification
     private $id;
 
     /**
-     * @var string|null
+     * @var int|null
      *
-     * @ORM\Column(name="note", type="string", length=45, nullable=true)
+     * @ORM\Column(name="qualification", type="integer", nullable=true)
      */
-    private $note;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="inscription_id", type="integer", nullable=false)
-     */
-    private $inscriptionId;
+    private $qualification;
 
     /**
      * @var \DateTime|null
@@ -48,6 +41,16 @@ class Qualification
      * @ORM\Column(name="update_time", type="datetime", nullable=true)
      */
     private $updateTime;
+
+    /**
+     * @var \Inscription
+     *
+     * @ORM\ManyToOne(targetEntity="Inscription")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inscription_id", referencedColumnName="id")
+     * })
+     */
+    private $inscription;
 
     /**
      * @var \Subject
@@ -74,26 +77,14 @@ class Qualification
         return $this->id;
     }
 
-    public function getNote(): ?string
+    public function getQualification(): ?int
     {
-        return $this->note;
+        return $this->qualification;
     }
 
-    public function setNote(?string $note): self
+    public function setQualification(?int $qualification): self
     {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    public function getInscriptionId(): ?int
-    {
-        return $this->inscriptionId;
-    }
-
-    public function setInscriptionId(int $inscriptionId): self
-    {
-        $this->inscriptionId = $inscriptionId;
+        $this->qualification = $qualification;
 
         return $this;
     }
@@ -118,6 +109,18 @@ class Qualification
     public function setUpdateTime(?\DateTimeInterface $updateTime): self
     {
         $this->updateTime = $updateTime;
+
+        return $this;
+    }
+
+    public function getInscription(): ?Inscription
+    {
+        return $this->inscription;
+    }
+
+    public function setInscription(?Inscription $inscription): self
+    {
+        $this->inscription = $inscription;
 
         return $this;
     }
