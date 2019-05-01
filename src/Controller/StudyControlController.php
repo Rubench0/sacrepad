@@ -533,7 +533,7 @@ class StudyControlController extends AbstractController {
 						$hasc = array();
 						$qualification = ($qualification) ? $qualification->getQualification() : 'N/A';
 						foreach ($days_has as $key => $value) {
-							$days_has[] = [
+							$hasc[] = [
 								'day' => $days_has[$key]->getNDays()->getDay(),
 								'hours' => $days_has[$key]->getHours(),
 								'classTime' => $days_has[$key]->getClassTime(),
@@ -546,7 +546,7 @@ class StudyControlController extends AbstractController {
 							'nTypesSubject' => $_lection[$key]->getSubject()->getNClassificationSubject()->getName(),
 							'nClassificationSubject' => $_lection[$key]->getSubject()->getNTypesSubject()->getName(),
 							'qualification' => $qualification,
-							'hassday' => $days_has,
+							'hassday' => $hasc,
 						];
 					}
 					$data = [
