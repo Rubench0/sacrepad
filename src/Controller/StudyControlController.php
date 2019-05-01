@@ -498,7 +498,7 @@ class StudyControlController extends AbstractController {
 				break;
 				case 'Cohort-Student':
 					$user =  $em->getRepository(User::class)->findOneById($id_data);
-					$Inscription =  $em->getRepository(Inscription::class)->findBy(array('student'=>$user->getId()));
+					$Inscription =  $em->getRepository(Inscription::class)->findBy(array('student'=>$user->getStudent()->getId()));
 					$data = array();
 					foreach ($Inscription as $key => $value) {
 						$data[] = [
@@ -506,7 +506,7 @@ class StudyControlController extends AbstractController {
 							'year' => $Inscription[$key]->getCohort()->getYear(),
 						];
 					}
-					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando asignaturas del estudiante id='.$user->getId().'',$identity->id);
+					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando inscripciones del estudiante id='.$user->getId().'',$identity->id);
 				break;
 				case 'Cohort':
 					$Cohort =  $em->getRepository(Cohort::class)->findOneById($id_data);

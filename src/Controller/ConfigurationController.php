@@ -647,7 +647,7 @@ class ConfigurationController extends AbstractController {
 						$Cohort->setFinalDate($datefin);
 						$Cohort->setYear($year);
 						$Cohort->setCode($code);
-						$Cohort->setLimit($limit);
+						$Cohort->setLimix($limit);
 						$Cohort->setCreateTime($createdAt);
 						$user = $em->getRepository(User::class)->findOneById($identity->id);
 						$Cohort->setUser($user);
@@ -739,6 +739,7 @@ class ConfigurationController extends AbstractController {
 				'finalDate' => $Cohort->getFinalDate(),
 				'year' => $Cohort->getYear(),
 				'code' => $Cohort->getCode(),
+				'limit' => $Cohort->getLimix(),
 			];
 			$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de cohortes',$identity->id);
 			$response = array(
@@ -783,6 +784,7 @@ class ConfigurationController extends AbstractController {
 	 			$finalDate = (isset($form->finalDate)) ? $form->finalDate : null;
 	 			$year = (isset($form->year)) ? $form->year : null;
 	 			$active = (isset($form->active)) ? $form->active : null;
+	 			$limit = (isset($form->limit)) ? $form->limit : null;
 				if ($code != null) {
 	 				$Cohort =  $em->getRepository(Cohort::class)->findOneById($form->id);
 	 				if ($active == 'true') {
@@ -797,6 +799,7 @@ class ConfigurationController extends AbstractController {
 					$datefin = new \Datetime($finalDate);
 					$Cohort->setFinalDate($datefin);
 					$Cohort->setYear($year);
+					$Cohort->setLimix($limit);
 	 				$Cohort->setUpdateTime($updateAt);
 					$em->persist($Cohort);
 					$em->flush();
