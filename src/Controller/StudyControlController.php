@@ -491,7 +491,7 @@ class StudyControlController extends AbstractController {
 						$data[] = [
 							'code' => $Lections[$key]->getCode(),
 							'subject' => $Lections[$key]->getSubject()->getName(),
-							'cohort' => $Lections[$key]->getSubject()->getCohort()->getCode(),
+							'cohort' => $Lections[$key]->getCohort()->getCode(),
 						];
 					}
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando asignaturas del facilitador id='.$user->getId().'',$identity->id);
