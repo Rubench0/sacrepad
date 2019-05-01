@@ -57,11 +57,11 @@ class Cohort
     private $code;
 
     /**
-     * @var int|null
+     * @var string|null
      *
-     * @ORM\Column(name="limix", type="integer", nullable=true)
+     * @ORM\Column(name="limix", type="string", length=11, nullable=true)
      */
-    private $limit;
+    private $limix;
 
     /**
      * @var \DateTime|null
@@ -152,14 +152,14 @@ class Cohort
         return $this;
     }
 
-    public function getLimit(): ?int
+    public function getLimix(): ?string
     {
-        return $this->limit;
+        return $this->limix;
     }
 
-    public function setLimit(?int $limit): self
+    public function setLimix(?string $limix): self
     {
-        $this->limit = $limit;
+        $this->limix = $limix;
 
         return $this;
     }

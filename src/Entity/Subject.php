@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Subject
  *
- * @ORM\Table(name="subject", indexes={@ORM\Index(name="fk_subject_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_subject_n_types_subject1_idx", columns={"n_types_subject_id"}), @ORM\Index(name="fk_subject_cohort1_idx", columns={"cohort_id"}), @ORM\Index(name="fk_subject_n_classification_subject1_idx", columns={"n_classification_subject_id"})})
+ * @ORM\Table(name="subject", indexes={@ORM\Index(name="fk_subject_n_types_subject1_idx", columns={"n_types_subject_id"}), @ORM\Index(name="fk_subject_n_classification_subject1_idx", columns={"n_classification_subject_id"}), @ORM\Index(name="fk_subject_user1_idx", columns={"user_id"})})
  * @ORM\Entity
  */
 class Subject
@@ -48,16 +48,6 @@ class Subject
      * @ORM\Column(name="update_time", type="datetime", nullable=true)
      */
     private $updateTime;
-
-    /**
-     * @var \Cohort
-     *
-     * @ORM\ManyToOne(targetEntity="Cohort")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cohort_id", referencedColumnName="id")
-     * })
-     */
-    private $cohort;
 
     /**
      * @var \NClassificationSubject
@@ -138,18 +128,6 @@ class Subject
     public function setUpdateTime(?\DateTimeInterface $updateTime): self
     {
         $this->updateTime = $updateTime;
-
-        return $this;
-    }
-
-    public function getCohort(): ?Cohort
-    {
-        return $this->cohort;
-    }
-
-    public function setCohort(?Cohort $cohort): self
-    {
-        $this->cohort = $cohort;
 
         return $this;
     }

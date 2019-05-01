@@ -387,6 +387,21 @@ class StudyControlController extends AbstractController {
 					}
 					$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de clases.',$identity->id);
 				break;
+				case 'Cohort-Student':
+					$user = $em->getRepository(User::class)->findOneById($identity->id);
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('student' => $user->getStudent()));
+					foreach ($inscriptions as $key => $value) {
+						$data[] = [
+							'id' => $inscriptions[$key]->getId(),
+							'code' => $inscriptions[$key]->getCohort()->getCode(),
+							'year' => $inscriptions[$key]->getCohort()->getYear(),
+							'initial' => $inscriptions[$key]->getCohort()->getInitialDate(),
+							'final' => $inscriptions[$key]->getCohort()->getFinalDate(),
+							'aproved' => $inscriptions[$key]->getAproved(),
+						];
+					}
+					$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando lista de cursos del estudiantes.',$identity->id);
+				break;
 			}
 			$response = array(
 				'status' => 'success',
@@ -507,6 +522,46 @@ class StudyControlController extends AbstractController {
 						'inscriptions' => count($inscriptions),
 					];
 					$helpers->binnacleAction('Cohort','consulta',$createdAt,'Consultando datos del curso',$identity->id);
+				break;
+				case 'Inscription':
+					$Inscription =  $em->getRepository(Inscription::class)->findOneById($id_data);
+					$_lection =  $em->getRepository(Lection::class)->findBy(array('cohort' => $Inscription->getCohort()->getId()));
+					$lections = array();
+					foreach ($_lection as $key => $value) {
+						$qualification =  $em->getRepository(Qualification::class)->findOneBy(array('inscription' => $Inscription->getId(),'lection' => $_lection[$key]->getId()));
+						$days_has =  $em->getRepository(NDaysHasClass::class)->findBy(array('class' => $_lection[$key]->getId()));
+						$hasc = array();
+						$qualification = ($qualification) ? $qualification->getQualification() : 'N/A';
+						foreach ($days_has as $key => $value) {
+							$days_has[] = [
+								'day' => $days_has[$key]->getNDays()->getDay(),
+								'hours' => $days_has[$key]->getHours(),
+								'classTime' => $days_has[$key]->getClassTime(),
+							];
+						}
+						$lections[] = [
+							'id' => $_lection[$key]->getId(),
+							'name' => $_lection[$key]->getSubject()->getName(),
+							'description' => $_lection[$key]->getSubject()->getDescription(),
+							'nTypesSubject' => $_lection[$key]->getSubject()->getNClassificationSubject()->getName(),
+							'nClassificationSubject' => $_lection[$key]->getSubject()->getNTypesSubject()->getName(),
+							'qualification' => $qualification,
+							'hassday' => $days_has,
+						];
+					}
+					$data = [
+						'id' => $Inscription->getId(),
+						'cohort' => array(
+							'code'=> $Inscription->getCohort()->getCode(),
+							'dateinitial'=> $Inscription->getCohort()->getInitialDate(),
+							'datefinal'=> $Inscription->getCohort()->getFinalDate(),
+							'year'=> $Inscription->getCohort()->getYear(),
+						),
+						'student_id' => $Inscription->getStudent()->getId(),
+						'aproved' => $Inscription->getAproved(),
+						'subjects' => $lections,
+					];
+					$helpers->binnacleAction('Inscription','consulta',$createdAt,'Consultando datos del curso como estudiante',$identity->id);
 				break;
 			}
 			$response = array(

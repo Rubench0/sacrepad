@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Qualification
  *
- * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_subject1_idx", columns={"subject_id"}), @ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_qualification_inscription1_idx", columns={"inscription_id"})})
+ * @ORM\Table(name="qualification", indexes={@ORM\Index(name="fk_qualification_inscription1_idx", columns={"inscription_id"}), @ORM\Index(name="fk_qualification_user1_idx", columns={"user_id"}), @ORM\Index(name="fk_qualification_lection1_idx", columns={"lection_id"})})
  * @ORM\Entity
  */
 class Qualification
@@ -53,14 +53,14 @@ class Qualification
     private $inscription;
 
     /**
-     * @var \Subject
+     * @var \Lection
      *
-     * @ORM\ManyToOne(targetEntity="Subject")
+     * @ORM\ManyToOne(targetEntity="Lection")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="subject_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="lection_id", referencedColumnName="id")
      * })
      */
-    private $subject;
+    private $lection;
 
     /**
      * @var \User
@@ -125,14 +125,14 @@ class Qualification
         return $this;
     }
 
-    public function getSubject(): ?Subject
+    public function getLection(): ?Lection
     {
-        return $this->subject;
+        return $this->lection;
     }
 
-    public function setSubject(?Subject $subject): self
+    public function setLection(?Lection $lection): self
     {
-        $this->subject = $subject;
+        $this->lection = $lection;
 
         return $this;
     }
