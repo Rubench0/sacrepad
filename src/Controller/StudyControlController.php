@@ -273,7 +273,6 @@ class StudyControlController extends AbstractController {
 	 			$description = (isset($form->description)) ? $form->description : null;
 	 			$classification_id = (isset($form->classification)) ? $form->classification : null;
 	 			$type_id = (isset($form->type)) ? $form->type : null;
-	 			$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
 
 				if ($name != null) {
 					$em = $this->getDoctrine()->getManager();
@@ -282,8 +281,6 @@ class StudyControlController extends AbstractController {
 						$Subject = new Subject();
 						$Subject->setName($name);
 						$Subject->setDescription($description);
-						$cohort = $em->getRepository(Cohort::class)->findOneById($cohort_id);
-						$Subject->setCohort($cohort);
 						$classification = $em->getRepository(NClassificationSubject::class)->findOneById($classification_id);
 						$Subject->setNClassificationSubject($classification);
 						$type = $em->getRepository(NTypesSubject::class)->findOneById($type_id);
@@ -307,7 +304,6 @@ class StudyControlController extends AbstractController {
 	 					);
 					}
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
@@ -342,7 +338,7 @@ class StudyControlController extends AbstractController {
 							'name' => $subject[$key]->getName(),
 							'classification' => $subject[$key]->getNClassificationSubject()->getName(),
 							'role' => $identity->rol,
-							'cohort' => $subject[$key]->getCohort()->getCode(),
+							'type' => $subject[$key]->getNTypesSubject()->getName(),
 						];
 					}
 					$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando lista de asignaturas.',$identity->id);
@@ -441,7 +437,6 @@ class StudyControlController extends AbstractController {
 						'description' => $Subject->getDescription(),
 						'classification' => $Subject->getNClassificationSubject()->getId(),
 						'type' => $Subject->getNTypesSubject()->getId(),
-						'cohort' => $Subject->getCohort()->getId(),
 					];
 					$helpers->binnacleAction('Subject','consulta',$createdAt,'Consultando datos de asignatura',$identity->id);
 				break;
@@ -609,13 +604,10 @@ class StudyControlController extends AbstractController {
 			 					$description = (isset($form->description)) ? $form->description : null;
 			 					$classification_id = (isset($form->classification)) ? $form->classification : null;
 			 					$type_id = (isset($form->type)) ? $form->type : null;
-			 					$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
 
 								$Subject =  $em->getRepository(Subject::class)->findOneById($form->id);
 								$Subject->setName($name);
 								$Subject->setDescription($description);
-								$cohort = $em->getRepository(Cohort::class)->findOneById($cohort_id);
-								$Subject->setCohort($cohort);
 								$classification = $em->getRepository(NClassificationSubject::class)->findOneById($classification_id);
 								$Subject->setNClassificationSubject($classification);
 								$type = $em->getRepository(NTypesSubject::class)->findOneById($type_id);
