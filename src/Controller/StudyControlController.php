@@ -451,7 +451,7 @@ class StudyControlController extends AbstractController {
 							'hours' => $schedule[$key]->getHours(),
 						];
 					}
-					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $Lection->getSubject()->getCohort()->getId(), 'aproved' => true));
+					$inscriptions =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $Lection->getCohort()->getId(), 'aproved' => true));
 					$_inscriptions = array();
 					foreach ($inscriptions as $key => $value) {
 						$_inscriptions[] = [
@@ -466,13 +466,17 @@ class StudyControlController extends AbstractController {
 						'subject' => array(
 							'id' => $Lection->getSubject()->getId(),
 							'name' => $Lection->getSubject()->getName(),
-							'cohort' => array(
-								'code' => $Lection->getSubject()->getCohort()->getCode(),'id' => strval($Lection->getSubject()->getCohort()->getId())
-							)
 						),
-						'classroom' => array('id' => $Lection->getClassroom()->getId(),'name' => $Lection->getClassroom()->getName()),
-						'facilitator' => array('id' => $Lection->getFacilitator()->getId(),'name' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname()),
-						//'limit' => $Lection->getLimix(),
+						'cohort' => array(
+							'code' => $Lection->getCohort()->getCode(),
+							'id' => strval($Lection->getCohort()->getId())
+						),
+						'classroom' => array(
+							'id' => $Lection->getClassroom()->getId(),
+							'name' => $Lection->getClassroom()->getName()),
+						'facilitator' => array(
+							'id' => $Lection->getFacilitator()->getId(),
+							'name' => $Lection->getFacilitator()->getName().' '.$Lection->getFacilitator()->getSurname()),
 						'inscriptions' => $_inscriptions,
 						'days' => $days,
 					];
@@ -622,17 +626,18 @@ class StudyControlController extends AbstractController {
 			 					$subject_id = (isset($form->subject)) ? $form->subject : null;
 			 					$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
 			 					$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
-								$limit = (isset($form->limit)) ? $form->limit : null;
+								$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
 
 								$Lection =  $em->getRepository(Lection::class)->findOneById($form->id);
-								$Lection->setCode($code);
 								$classroom = $em->getRepository(Classroom::class)->findOneById($classroom_id);
-								$Lection->setClassroom($classroom);
 								$facilitator = $em->getRepository(Facilitator::class)->findOneById($facilitator_id);
-								$Lection->setFacilitator($facilitator);
 								$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
+								$cohort = $em->getRepository(Cohort::class)->findOneById($cohort_id);
+								$Lection->setCode($code);
+								$Lection->setClassroom($classroom);
+								$Lection->setFacilitator($facilitator);
 								$Lection->setSubject($subject);
-								$Lection->setLimix($limit);
+								$Lection->setCohort($cohort);
 								$Lection->setUpdateTime($updateAt);
 								$em->persist($Lection);
 								$em->flush();
@@ -730,21 +735,24 @@ class StudyControlController extends AbstractController {
 	 			$facilitator_id = (isset($form->facilitator)) ? $form->facilitator : null;
 	 			$subject_id = (isset($form->subject)) ? $form->subject : null;
 	 			$classroom_id = (isset($form->classroom)) ? $form->classroom : null;
+	 			$cohort_id = (isset($form->cohort)) ? $form->cohort : null;
 
 				if ($code != null) {
 					$em = $this->getDoctrine()->getManager();
 					$isset_data = $em->getRepository(Lection::class)->findBy(array('code' => $code));
 					if (count($isset_data) == 0) {
 						$Lection = new Lection();
-						$Lection->setCode($code);
 						$clasroom = $em->getRepository(Classroom::class)->findOneById($classroom_id);
-						$Lection->setClassroom($clasroom);
 						$facilitator = $em->getRepository(Facilitator::class)->findOneById($facilitator_id);
-						$Lection->setFacilitator($facilitator);
 						$subject = $em->getRepository(Subject::class)->findOneById($subject_id);
-						$Lection->setSubject($subject);
-						$Lection->setCreateTime($createdAt);
 						$user = $em->getRepository(User::class)->findOneById($identity->id);
+						$cohort = $em->getRepository(Cohort::class)->findOneById($cohort_id);
+						$Lection->setCode($code);
+						$Lection->setClassroom($clasroom);
+						$Lection->setFacilitator($facilitator);
+						$Lection->setSubject($subject);
+						$Lection->setCohort($cohort);
+						$Lection->setCreateTime($createdAt);
 						$Lection->setUser($user);
 						$em->persist($Lection);
 		    			$em->flush();
@@ -762,7 +770,6 @@ class StudyControlController extends AbstractController {
 	 					);
 					}
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
