@@ -464,8 +464,8 @@ class StudyControlController extends AbstractController {
 						'id' => $Lection->getId(),
 						'code' => $Lection->getCode(),
 						'subject' => array(
-							'id' => $Lection->getSubject()->getId(),
 							'name' => $Lection->getSubject()->getName(),
+							'id' => strval($Lection->getSubject()->getId())
 						),
 						'cohort' => array(
 							'code' => $Lection->getCohort()->getCode(),
@@ -858,7 +858,7 @@ class StudyControlController extends AbstractController {
 
 		if ($auth_check) {
 			$id_inscription = $request->request->get('id_inscription');
-			$id_subject = $request->request->get('id_subject');
+			$id_lection = $request->request->get('id_lection');
 			$json = $request->request->get('form');
 			$form = json_decode($json);
 			$response = array(
@@ -875,15 +875,15 @@ class StudyControlController extends AbstractController {
 
 				if ($id_inscription != null) {
 					$em = $this->getDoctrine()->getManager();
-					$isset_data = $em->getRepository(Qualification::class)->findOneBy(array('inscription' => $id_inscription,'subject' => $id_subject));
+					$isset_data = $em->getRepository(Qualification::class)->findOneBy(array('inscription' => $id_inscription,'lection' => $id_lection));
 					$Inscription = $em->getRepository(Inscription::class)->findOneById($id_inscription);
-					$Subject = $em->getRepository(Subject::class)->findOneById($id_subject);
+					$Lection = $em->getRepository(Lection::class)->findOneById($id_lection);
 					$user = $em->getRepository(User::class)->findOneById($identity->id);
 					if (!$isset_data) {
 						$Qualification = new Qualification();
 						$Qualification->setQualification($qualification);
 						$Qualification->setInscription($Inscription);
-						$Qualification->setSubject($Subject);
+						$Qualification->setLection($Lection);
 						$Qualification->setCreateTime($createdAt);
 						$Qualification->setUser($user);
 						$em->persist($Qualification);
@@ -893,7 +893,7 @@ class StudyControlController extends AbstractController {
 					} else {
 						$isset_data->setQualification($qualification);
 						$isset_data->setInscription($Inscription);
-						$isset_data->setSubject($Subject);
+						$isset_data->setLection($Lection);
 						$isset_data->setCreateTime($createdAt);
 						$isset_data->setUser($user);
 						$em->persist($isset_data);
