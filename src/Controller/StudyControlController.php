@@ -374,7 +374,7 @@ class StudyControlController extends AbstractController {
 							'id' => $cohorts[$key]->getId(),
 							'code' => $cohorts[$key]->getCode(),
 							'year' => $cohorts[$key]->getYear(),
-							'limit' => $cohorts[$key]->getLimit(),
+							'limit' => $cohorts[$key]->getLimix(),
 							'initial' => $cohorts[$key]->getInitialDate(),
 							'final' => $cohorts[$key]->getFinalDate(),
 							//'limit' => $cohort[$key]->getLimix(),
@@ -514,7 +514,7 @@ class StudyControlController extends AbstractController {
 						'id' => $Cohort->getId(),
 						'code' => $Cohort->getCode(),
 						'year' => $Cohort->getYear(),
-						'limit' => $Cohort->getLimit(),
+						'limit' => $Cohort->getLimix(),
 						'initial' => $Cohort->getInitialDate(),
 						'final' => $Cohort->getFinalDate(),
 						'active' => $Cohort->getActive(),
@@ -1252,19 +1252,19 @@ class StudyControlController extends AbstractController {
 		if ($auth_check) {
 			$em = $this->getDoctrine()->getManager();
 			$id_cohort = $request->request->get('id_cohort');
-			$subjetcs =  $em->getRepository(Subject::class)->findBy(array('cohort' => $id_cohort));
+			$lection =  $em->getRepository(Lection::class)->findBy(array('cohort' => $id_cohort));
 			$identity = $jwtauth->checkToken($token, true);
 			$data = array();
-			foreach ($subjetcs as $key => $value) {
+			foreach ($lection as $key => $value) {
 				$data[] = [
-					'id' => $subjetcs[$key]->getId(),
-					'name' => $subjetcs[$key]->getName(),
-					'description' => $subjetcs[$key]->getDescription(),
-					'classification' => $subjetcs[$key]->getNClassificationSubject()->getName(),
-					'type' => $subjetcs[$key]->getNTypesSubject()->getName(),
+					'id' => $lection[$key]->getSubject()->getId(),
+					'name' => $lection[$key]->getSubject()->getName(),
+					'description' => $lection[$key]->getSubject()->getDescription(),
+					'classification' => $lection[$key]->getSubject()->getNClassificationSubject()->getName(),
+					'type' => $lection[$key]->getSubject()->getNTypesSubject()->getName(),
 				];
 			}
-			$helpers->binnacleAction('Subject','consulta',$createdAt,'consulta de materias de la cohorte id='.$id_cohort.'',$identity->id);
+			$helpers->binnacleAction('Lection','consulta',$createdAt,'consulta de materias de la cohorte id='.$id_cohort.'',$identity->id);
 			$response = array(
 				'status' => 'success',
 				'code' => 200,
