@@ -1291,5 +1291,44 @@ class StudyControlController extends AbstractController {
 		}
 		return $helpers->json($response);
 	}
+
+	/**
+	 * @Route("/studycontrol/get/finalqualifications", name="studycontrol_get_finalqualifications", methods={"POST"})
+	 */
+	public function Getfinalqualifications(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$id_student = $request->request->get('id_student');
+			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('student' => $id_student));
+			$identity = $jwtauth->checkToken($token, true);
+			$data = array();
+			$sum = 0;
+			if ($inscription) {
+				$qualifications =  $em->getRepository(Qualification::class)->findBy(array('inscription' => $inscription->getId()));
+				$lections = count($qualifications);
+				foreach ($qualifications as $key => $value) {
+					$sum = $sum + $qualifications[$key]->getQualification();
+				}
+				$final = $sum / $lections;
+			}
+			$helpers->binnacleAction('Qualification','consulta',$createdAt,'obteniendo nota final del estudiante id='.$id_student.'',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $final,
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+		return $helpers->json($response);
+	}
 }
 
