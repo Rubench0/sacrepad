@@ -18,7 +18,7 @@ use App\Entity\User;
 
 
 class ConfigurationController extends AbstractController {
-	
+
 	/**
 	 * @Route("/configuration/days/new", name="configuration_days_new", methods={"POST"})
 	 */
@@ -68,7 +68,6 @@ class ConfigurationController extends AbstractController {
 	 					);
 					}
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
