@@ -14,10 +14,20 @@ class ConfigurationControllerTest extends TestCase
             'base_uri' => 'http://localhost/sacrepad/sacrepad-api/public/index.php/',
             'timeout'  => 2.0,
         ]);
+        $data = array();
+        $data['email'] = 'admin@admin.com';
+        $data['password'] = '12345678';
+        $data2 = array();
+        $data2['json'] = $data;
+        $formData = json_encode($data);
+        var_dump($formData);
         $response = $client->request('POST', 'login', [
-            'json' => ['admin@admin.com', '12345678']
+            'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+            // 'body' => $formData
+            'form_params' => ['json' , $formData]
         ]);
-        //var_dump($response);
-        $this->assertEquals(200, $response->getStatusCode());;
+        $body = json_decode($response->getBody(), true);
+        var_dump($body);
+        //$this->assertEquals(200, $response->getStatusCode());;
     }
 }
