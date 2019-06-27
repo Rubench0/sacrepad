@@ -251,7 +251,7 @@ class UsersController extends AbstractController {
 					$response = array(
 						'status' => 'success',
 						'code' => 200,
-						'msg' => 'Estudiante Pre - inscrito existosamente, redirigiendo al login...',
+						'msg' => 'Estudiante Pre - inscrito existosamente',
 						'user' => $User
 					);
 	 			}
