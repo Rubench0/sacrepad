@@ -1206,7 +1206,7 @@ class StudyControlController extends AbstractController {
 			$aproved = $inscription->getAproved();
 				if ($aproved != 'false') {
 					$aprov = 1;
-					if (count($inscriptions) >= $cohort->getLimit()) {
+					if (count($inscriptions) >= $cohort->getLimix()) {
 						$msg = 'Limite de inscripciones alcanzado';
 					} else {
 						$inscription->setAproved(1);
