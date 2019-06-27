@@ -1162,11 +1162,10 @@ class StudyControlController extends AbstractController {
 
 		if ($auth_check) {
 			$em = $this->getDoctrine()->getManager();
-			$id_student = $request->request->get('id_student');
-			$id_cohort = $request->request->get('id_cohort');
+			$id_inscription = $request->request->get('id_inscription');
 			$identity = $jwtauth->checkToken($token, true);
-			$inscription =  $em->getRepository(Inscription::class)->findOneBy(array('cohort' => $id_cohort,'student' => $id_student));
-			$helpers->binnacleAction('Inscription','elimino',$createdAt,'Se retiro el estudiante id='.$id_student.' de la cohorte id='.$id_cohort.'. ',$identity->id);
+			$inscription =  $em->getRepository(Inscription::class)->findOneById($id_inscription);
+			$helpers->binnacleAction('Inscription','elimino',$createdAt,'Se retiro el estudiante id='.$id_inscription,$identity->id);
 			$em->remove($inscription);
 			$em->flush();
 			$response = array(
@@ -1174,7 +1173,6 @@ class StudyControlController extends AbstractController {
 				'code' => 200,
 				'msg' => 'Estudiante retirado.',
 			);
-			
 		} else {
 			$response = array(
 				'status' => 'error',
