@@ -403,6 +403,7 @@ class UsersController extends AbstractController {
 						'surname' => $user->getUserData()->getSurname(),
 						'phone' => $user->getUserData()->getPhone(),
 						'type' => '1',
+						'active' => $user->getIsActive(),
 					];
 
 			} elseif ($user->getFacilitator())  {
@@ -417,6 +418,7 @@ class UsersController extends AbstractController {
 						'type' => '2',
 						'identification' => $user->getFacilitator()->getIdentification(),
 						'profession' => $user->getFacilitator()->getProfession(),
+						'active' => $user->getIsActive(),
 				];
 			} elseif ($user->getStudent()) {
 				$data = [
@@ -431,6 +433,7 @@ class UsersController extends AbstractController {
 						'identification' => $user->getStudent()->getIdentification(),
 						'name2' => $user->getStudent()->getName2(),
 						'surname2' => $user->getStudent()->getSurname2(),
+						'active' => $user->getIsActive(),
 				];
 			}
 			$helpers->binnacleAction('User','consulta',$createdAt,'Consultando datos de usuario.',$identity->id);
@@ -589,7 +592,6 @@ class UsersController extends AbstractController {
 						'msg' => 'Usuario actualizado.'
 		 			);
 				}
-	 		
 	 		}
 		} else {
 			$response = array(
@@ -643,7 +645,49 @@ class UsersController extends AbstractController {
 
 		return $helpers->json($response);
 	}
-			
+
+	/**
+	 * @Route("/user/changestatusUser", name="user_changestatusUser", methods={"POST"})
+	 */
+	public function UserchangestatusUser(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$updateAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$em = $this->getDoctrine()->getManager();
+			$status = $request->request->get('status');
+			$id_user = $request->request->get('id');
+			$identity = $jwtauth->checkToken($token, true);
+			$User =  $em->getRepository(User::class)->findOneById($id_user);
+			if ($status == 'false') {
+				$User->setIsActive(0);
+				$em->persist($User);
+				$em->flush();
+				$helpers->binnacleAction('User','actualización',$updateAt,'Desactivando usuario =.'.$id_user.'',$identity->id);
+				$msg = 'Usuario desactivado.';
+			} else {
+				$User->setIsActive(1);
+				$em->persist($User);
+				$em->flush();
+				$helpers->binnacleAction('User','actualización',$updateAt,'Activando usuario =.'.$id_user.'',$identity->id);
+				$msg = 'Usuario activado.';
+			}
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => $msg
+				);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
 }
 
 
