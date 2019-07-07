@@ -27,7 +27,6 @@ class SecurityController extends AbstractController
 		);
 
 		$json = $request->request->get('json');
-		$params = json_decode($json);
 		if ($json != null) {
 			$params = json_decode($json);
 			$email = (isset($params->email)) ? $params->email : null;

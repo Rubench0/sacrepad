@@ -484,7 +484,13 @@ class UsersController extends AbstractController {
 
 	 			$password_old = hash('sha256', $password_old);
 
-				if ($password == $password_old) {
+				if ($password_old == $password_new) {
+					$response = array(
+						'status' => 'error',
+						'code' => 400,
+						'msg' => 'La contraseña acutal y nueva no pueden ser las mismas.',
+					);
+				} elseif($password == $password_old) {
 					$password_new = hash('sha256', $password_new);
 					$User->setPassword($password_new);
 					$em->persist($User);
@@ -494,7 +500,7 @@ class UsersController extends AbstractController {
 						'status' => 'success',
 						'code' => 200,
 						'msg' => 'Contraseña actualizada exitosamente, ingrese sesión nuevamente.',
-		 			);
+					 );
 				} else {
 					$response = array(
 						'status' => 'error',
@@ -502,7 +508,6 @@ class UsersController extends AbstractController {
 						'msg' => 'La contraseña actual no coincide.',
 					);
 				}
-
 	 		}
 		} else {
 			$response = array(
@@ -512,7 +517,7 @@ class UsersController extends AbstractController {
 			);
 		}
 
-		return $helpers->json($response);	
+		return $helpers->json($response);
 	}
 
 	/**
