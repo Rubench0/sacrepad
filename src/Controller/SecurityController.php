@@ -58,9 +58,10 @@ class SecurityController extends AbstractController
 			$identity = $jwtauth->checkToken($token, true);
 			$users =  $em->getRepository(BinnacleActions::class)->findAll();
 			foreach ($users as $key => $value) {
+				$user = $users[$key]->getUser() ? $users[$key]->getUser()->getLogin() : 'N/R';
 				$data[] = [
 					'id' => $users[$key]->getId(),
-					'user' => $users[$key]->getUser()->getLogin(),
+					'user' => $user,
 					'model' => $users[$key]->getEntity(),
 					'action' => $users[$key]->getAction(),
 					'date' => $users[$key]->getDate(),
