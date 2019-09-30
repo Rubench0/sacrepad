@@ -338,7 +338,7 @@ class UsersController extends AbstractController {
 			);
 		}
 
-		return $helpers->json($response);	
+		return $helpers->json($response);
 	}
 
 
