@@ -500,9 +500,13 @@ class StudyControlController extends AbstractController {
 					$Inscription =  $em->getRepository(Inscription::class)->findBy(array('student'=>$user->getStudent()->getId()));
 					$data = array();
 					foreach ($Inscription as $key => $value) {
+						$code = $Inscription[$key]->getCohort() ? $Inscription[$key]->getCohort()->getCode() : null;
+						$year = $Inscription[$key]->getCohort() ? $Inscription[$key]->getCohort()->getYear() : null;
 						$data[] = [
-							'cohort' => $Inscription[$key]->getCohort()->getCode(),
-							'year' => $Inscription[$key]->getCohort()->getYear(),
+							'id' => $Inscription[$key]->getId(),
+							'aproved' => $Inscription[$key]->getAproved(),
+							'cohort' => $code,
+							'year' => $year,
 						];
 					}
 					$helpers->binnacleAction('Lection','consulta',$createdAt,'Consultando inscripciones del estudiante id='.$user->getId().'',$identity->id);
@@ -1326,6 +1330,88 @@ class StudyControlController extends AbstractController {
 				'msg' => 'No tiene acceso.',
 			);
 		}
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/registry/preinscription", name="studycontrol_registry_preinscription", methods={"POST"})
+	 */
+	public function preInscription(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$identity = $jwtauth->checkToken($token, true);
+			$em = $this->getDoctrine()->getManager();
+			$id_user = $request->request->get('id_user');
+			$id_cohort = $request->request->get('id_cohort');
+			$preinscription =  $em->getRepository(Inscription::class)->findBy(array('cohort' => $id_cohort,'user' => $id_user));
+			if ($preinscription) {
+				$msg = 'Ya se encuentra inscrito en esta cohorte.';
+			} else {
+				$cohort =  $em->getRepository(Cohort::class)->findOneById($id_cohort);
+				$user =  $em->getRepository(User::class)->findOneById($id_user);
+				$user_student = $user->getStudent();
+				$preInscription = new Inscription();
+				$preInscription->setCohort($cohort);
+				$preInscription->setStudent($user_student);
+				$preInscription->setUser($user);
+				$preInscription->setAproved(0);
+				$preInscription->setCreateTime($createdAt);
+				$em->persist($preInscription);
+				$em->flush();
+				$msg = 'Pre - Inscripción realizada con éxito.';
+				$helpers->binnacleAction('Inscription','registar',$createdAt,'Preinscripción de estudiante id='.$id_user.' en el cohorte ='.$id_cohort,$identity->id);
+			}
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => $msg
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/studycontrol/delete/desinscription", name="studycontrol_delete_desinscription", methods={"POST"})
+	 */
+	public function desInscription(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+		$createdAt = new \Datetime('now');
+
+		if ($auth_check) {
+			$identity = $jwtauth->checkToken($token, true);
+			$em = $this->getDoctrine()->getManager();
+			$id_inscrip = $request->request->get('id_inscrip');
+			$preinscription =  $em->getRepository(Inscription::class)->findOneById($id_inscrip);
+			if ($preinscription) {
+				$em->remove($preinscription);
+				$em->flush();
+				$helpers->binnacleAction('Inscription','elimino',$createdAt,'Se retiro elimino la inscripcion id='.$id_inscrip,$identity->id);
+				$msg = 'Desinscripción exitosa.';
+			}
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'msg' => $msg
+			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
 		return $helpers->json($response);
 	}
 }
