@@ -46,6 +46,7 @@ class srcApp_KernelDevDebugContainerUrlGenerator extends Symfony\Component\Routi
         'security_binnacle_actions' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleActions'), array(), array(array('text', '/security/binnacle/actions')), array(), array()),
         'security_binnacle_access' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::binnacleAccess'), array(), array(array('text', '/security/binnacle/access')), array(), array()),
         'security_database_backup' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::dataBaseBackup'), array(), array(array('text', '/security/database/backup')), array(), array()),
+        'security_database_list' => array(array(), array('_controller' => 'App\\Controller\\SecurityController::dataBaseList'), array(), array(array('text', '/security/database/list')), array(), array()),
         'studycontrol_view_facilitators' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::facilitatorsAll'), array(), array(array('text', '/studycontrol/facilitators')), array(), array()),
         'studycontrol_view_students' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::studentsAll'), array(), array(array('text', '/studycontrol/students')), array(), array()),
         'studycontrol_view_nclasssubjects' => array(array(), array('_controller' => 'App\\Controller\\StudyControlController::getSelects'), array(), array(array('text', '/studycontrol/get/selects')), array(), array()),

@@ -137,8 +137,9 @@ class SecurityController extends AbstractController
 
 		if ($auth_check) {
 			$createdAt = new \Datetime('now');
-			$datebd = date_format($createdAt, 'Y-m-dH:i:s');
-			$command = 'mysqldump -uadmin -p123456 sacrepad > /var/www/html'.$request->getBasePath().'/BackupBD/'.$datebd.'Saprcpad.sql';
+			$datebd = date_format($createdAt, 'Y-m-d_H:i:s');
+			$identity = $jwtauth->checkToken($token, true);
+			$command = 'mysqldump -uadmin -p123456 sacrepad > /var/www/html'.$request->getBasePath().'/BackupBD/'.$datebd.'_saprcpad.sql';
 			$process = new Process($command);
 			$process->run();
 			if (!$process->isSuccessful()) {
@@ -156,6 +157,46 @@ class SecurityController extends AbstractController
 					'msg' => 'Base de datos respaldada con exito.'
 				);
 			}
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+
+	}
+
+	/**
+	 * @Route("/security/database/list", name="security_database_list", methods={"POST"})
+	 */
+	public function dataBaseList(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$createdAt = new \Datetime('now');
+			$identity = $jwtauth->checkToken($token, true);
+			$ruta = '/var/www/html'.$request->getBasePath().'/BackupBD/';
+			$data = array();
+			$directorio = opendir($ruta);
+			while (($archivo = readdir($directorio)) !== false) {
+				$file_arr = explode('_',$archivo);
+				if (count($file_arr) > 2) {
+					$file_arr[] = $archivo;
+					$baseurl = str_replace("index.php", "BackupBD", $request->getBaseUrl());
+					$data[] = array('date' => $file_arr[0].' '.$file_arr[1], 'name' => $file_arr[2], 'download' => $request->getSchemeAndHttpHost().$baseurl.'/'.$file_arr[3]);
+				}
+			}
+			// $helpers->binnacleAction('Database','respaldo',$createdAt,'Respaldo de base de datos.',$identity->id);
+			$response = array(
+				'status' => 'success',
+				'code' => 200,
+				'data' => $data,
+			);
 		} else {
 			$response = array(
 				'status' => 'error',
