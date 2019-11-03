@@ -11,6 +11,8 @@ use App\Service\Helpers;
 use App\Service\JwtAuth;
 use App\Entity\BinnacleActions;
 use App\Entity\BinnacleAccessUser;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 
 class SecurityController extends AbstractController
@@ -114,6 +116,46 @@ class SecurityController extends AbstractController
 				'code' => 200,
 				'data' => $data,
 			);
+		} else {
+			$response = array(
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'No tiene acceso.',
+			);
+		}
+
+		return $helpers->json($response);
+	}
+
+	/**
+	 * @Route("/security/database/backup", name="security_database_backup", methods={"POST"})
+	 */
+	public function dataBaseBackup(Request $request,Helpers $helpers, JwtAuth $jwtauth) {
+
+		$token = $request->request->get('authorization', null);
+		$auth_check = $jwtauth->checkToken($token);
+
+		if ($auth_check) {
+			$createdAt = new \Datetime('now');
+			$datebd = date_format($createdAt, 'Y-m-dH:i:s');
+			$command = 'mysqldump -uadmin -p123456 sacrepad > /var/www/html'.$request->getBasePath().'/BackupBD/'.$datebd.'Saprcpad.sql';
+			$process = new Process($command);
+			$process->run();
+			if (!$process->isSuccessful()) {
+				// throw new ProcessFailedException($process);
+				$response = array(
+					'status' => 'success',
+					'code' => 400,
+					'msg' => 'Error al respaldar base de datos.'
+				);
+			} else {
+				$helpers->binnacleAction('Database','respaldo',$createdAt,'Respaldo de base de datos.',$identity->id);
+				$response = array(
+					'status' => 'success',
+					'code' => 200,
+					'msg' => 'Base de datos respaldada con exito.'
+				);
+			}
 		} else {
 			$response = array(
 				'status' => 'error',
